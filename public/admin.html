@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Geopharm Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe', 
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a'
+                        },
+                        medical: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0', 
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d'
+                        },
+                        accent: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            300: '#fcd34d', 
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            800: '#92400e',
+                            900: '#78350f'
+                        },
+                        admin: {
+                            50: '#fdf4ff',
+                            100: '#fae8ff',
+                            200: '#f5d0fe',
+                            300: '#f0abfc',
+                            400: '#e879f9',
+                            500: '#d946ef',
+                            600: '#c026d3',
+                            700: '#a21caf',
+                            800: '#86198f',
+                            900: '#701a75'
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'ui-sans-serif', 'system-ui']
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-gentle': 'bounceGentle 2s infinite',
+                        'float': 'float 3s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        bounceGentle: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+                        'strong': '0 10px 40px -10px rgba(0, 0, 0, 0.1), 0 2px 10px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 20px -5px rgba(59, 130, 246, 0.5)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #d946ef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .admin-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #d946ef 50%, #22c55e 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-admin-50 font-sans">
+    <!-- Background Elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-64 h-64 bg-primary-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow"></div>
+        <div class="absolute top-40 right-20 w-80 h-80 bg-admin-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style="animation-delay: 1s;"></div>
+        <div class="absolute bottom-20 left-1/3 w-72 h-72 bg-medical-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style="animation-delay: 2s;"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="relative bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-soft sticky top-0 z-40">
+        <!-- Header Background decoration -->
+        <div class="absolute inset-0 admin-gradient opacity-10"></div>
+        
+        <div class="relative max-w-7xl mx-auto px-6 py-6">
+            <div class="flex justify-between items-center">
+                <!-- Logo and Brand -->
+                <div class="flex items-center space-x-4 animate-fade-in">
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-500 to-admin-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+                        <div class="relative w-16 h-16 bg-gradient-to-r from-primary-500 to-admin-500 rounded-2xl flex items-center justify-center transform group-hover:scale-105 transition-transform duration-300 shadow-strong">
+                            <i class="fas fa-user-shield text-white text-2xl"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold gradient-text">Miss Afungfe</h1>
+                        <p class="text-sm text-gray-600 font-medium flex items-center">
+                            <i class="fas fa-shield-alt mr-2 text-admin-500"></i>
+                            Platform Management Dashboard
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Header Actions -->
+                <div class="flex items-center space-x-4">
+                    <!-- Quick Stats -->
+                    <div class="hidden lg:flex items-center space-x-6 mr-6">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-primary-600" id="totalPharmacies">0</div>
+                            <div class="text-xs text-gray-600">Pharmacies</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-medical-600" id="activeUsers">0</div>
+                            <div class="text-xs text-gray-600">Users</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-accent-600" id="pendingApprovals">0</div>
+                            <div class="text-xs text-gray-600">Pending</div>
+                        </div>
+                    </div>
+
+                    <!-- Notifications -->
+                    <div class="relative group">
+                        <button class="w-12 h-12 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-105">
+                            <i class="fas fa-bell text-gray-600 group-hover:text-gray-800"></i>
+                        </button>
+                        <div class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center animate-bounce-gentle">
+                            <span class="text-xs text-white font-bold" id="notificationCount">3</span>
+                        </div>
+                    </div>
+
+                    <!-- User Menu -->
+                    <div class="flex items-center space-x-3">
+                        <a href="admin-pharmacy-management.html" class="px-4 py-2 bg-medical-50 hover:bg-medical-100 text-medical-600 hover:text-medical-700 rounded-xl transition-all duration-300 flex items-center space-x-2 hover:scale-105">
+                            <i class="fas fa-hospital"></i>
+                            <span class="hidden sm:inline font-medium">Manage Pharmacies</span>
+                        </a>
+                        
+                        <div class="hidden sm:block text-right">
+                            <div class="text-sm font-semibold text-gray-800">Admin User</div>
+                            <div class="text-xs text-gray-600">Super Administrator</div>
+                        </div>
+                        <button onclick="logout()" class="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 rounded-xl transition-all duration-300 flex items-center space-x-2 hover:scale-105">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span class="hidden sm:inline font-medium">Logout</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative max-w-7xl mx-auto px-6 py-12 animate-fade-in">
+        <!-- Welcome Section -->
+        <div class="text-center mb-16 animate-slide-up">
+            <div class="mb-6">
+                <span class="inline-block bg-gradient-to-r from-primary-500 to-admin-500 text-white px-6 py-2 rounded-full text-sm font-semibold">
+                    🛡️ Administrative Control Center
+                </span>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                <span class="gradient-text">Platform</span><br>
+                <span class="text-gray-800">Management Hub</span>
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Monitor pharmacy registrations, manage approvals, and oversee the entire Geopharm ecosystem.
+            </p>
+        </div>
+
+        <!-- Enhanced Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16 animate-slide-up" style="animation-delay: 0.2s;">
+            <!-- Total Registrations Card -->
+            <div class="group relative">
+                <div class="absolute inset-0 bg-gradient-to-r from-primary-400 to-primary-500 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+                <div class="relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-strong border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-r from-primary-400 to-primary-500 rounded-2xl flex items-center justify-center shadow-soft">
+                            <i class="fas fa-clipboard-list text-white text-2xl"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-3xl font-bold text-gray-800 block" id="totalRegistrations">0</span>
+                            <span class="text-sm text-primary-600 font-medium" id="totalRegistrationsChange">No data yet</span>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Total Registrations</h3>
+                    <p class="text-sm text-gray-600">All pharmacy applications</p>
+                </div>
+            </div>
+
+            <!-- Pending Registrations Card -->
+            <div class="group relative">
+                <div class="absolute inset-0 bg-gradient-to-r from-accent-400 to-accent-500 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+                <div class="relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-strong border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-r from-accent-400 to-accent-500 rounded-2xl flex items-center justify-center shadow-soft">
+                            <i class="fas fa-clock text-white text-2xl"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-3xl font-bold text-gray-800 block" id="pendingRegistrations">0</span>
+                            <span class="text-sm text-accent-600 font-medium" id="pendingRegistrationsChange">No pending</span>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Pending Review</h3>
+                    <p class="text-sm text-gray-600">Awaiting approval</p>
+                </div>
+            </div>
+
+            <!-- Approved Registrations Card -->
+            <div class="group relative">
+                <div class="absolute inset-0 bg-gradient-to-r from-medical-400 to-medical-500 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+                <div class="relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-strong border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-r from-medical-400 to-medical-500 rounded-2xl flex items-center justify-center shadow-soft">
+                            <i class="fas fa-check-circle text-white text-2xl"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-3xl font-bold text-gray-800 block" id="approvedRegistrations">0</span>
+                            <span class="text-sm text-medical-600 font-medium" id="approvedRegistrationsChange">No active</span>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Approved</h3>
+                    <p class="text-sm text-gray-600">Active pharmacies</p>
+                </div>
+            </div>
+
+            <!-- Rejected Registrations Card -->
+            <div class="group relative">
+                <div class="absolute inset-0 bg-gradient-to-r from-red-400 to-red-500 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+                <div class="relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-strong border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-r from-red-400 to-red-500 rounded-2xl flex items-center justify-center shadow-soft">
+                            <i class="fas fa-times-circle text-white text-2xl"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-3xl font-bold text-gray-800 block" id="rejectedRegistrations">0</span>
+                            <span class="text-sm text-red-600 font-medium" id="rejectedRegistrationsChange">No rejections</span>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Rejected</h3>
+                    <p class="text-sm text-gray-600">Declined applications</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg mb-8 border border-white/20">
+            <div class="border-b border-gray-200/50">
+                <nav class="-mb-px flex flex-wrap gap-2 sm:gap-8 px-6 py-2">
+                    <button onclick="filterRegistrations('all')" class="filter-tab group relative border-b-2 border-primary-500 text-primary-600 py-4 px-3 text-sm font-semibold transition-all duration-200" data-filter="all">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-list"></i>
+                            <span>All Registrations</span>
+                        </div>
+                        <div class="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full"></div>
+                    </button>
+                    <button onclick="filterRegistrations('pending')" class="filter-tab group relative border-b-2 border-transparent text-secondary-500 hover:text-amber-600 hover:border-amber-300 py-4 px-3 text-sm font-semibold transition-all duration-200" data-filter="pending">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-clock"></i>
+                            <span>Pending</span>
+                        </div>
+                    </button>
+                    <button onclick="filterRegistrations('approved')" class="filter-tab group relative border-b-2 border-transparent text-secondary-500 hover:text-green-600 hover:border-green-300 py-4 px-3 text-sm font-semibold transition-all duration-200" data-filter="approved">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Approved</span>
+                        </div>
+                    </button>
+                    <button onclick="filterRegistrations('rejected')" class="filter-tab group relative border-b-2 border-transparent text-secondary-500 hover:text-red-600 hover:border-red-300 py-4 px-3 text-sm font-semibold transition-all duration-200" data-filter="rejected">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-times-circle"></i>
+                            <span>Rejected</span>
+                        </div>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Registrations List -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20">
+            <div class="px-6 py-6 border-b border-gray-200/50">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-building text-white text-sm"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-secondary-900">Pharmacy Registrations</h2>
+                    </div>
+                    <div class="flex items-center space-x-2 text-sm text-secondary-500">
+                        <i class="fas fa-sync-alt animate-spin-slow"></i>
+                        <span>Live updates</span>
+                    </div>
+                </div>
+            </div>
+            <div id="registrationsList" class="divide-y divide-gray-200/50">
+                <!-- Registrations will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Registration Details -->
+    <div id="registrationModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-50 animate-fade-in">
+        <div class="relative top-10 mx-auto p-6 w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 max-w-4xl animate-slide-up">
+            <div class="bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+                <!-- Modal Header -->
+                <div class="bg-gradient-to-r from-primary-500 to-primary-600 px-8 py-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-building text-white text-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white" id="modalTitle">Pharmacy Registration Details</h3>
+                                <p class="text-primary-100 text-sm">Review application information</p>
+                            </div>
+                        </div>
+                        <button onclick="closeModal()" class="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white hover:text-white transition-all duration-200 group">
+                            <i class="fas fa-times group-hover:rotate-90 transition-transform duration-200"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Modal Content -->
+                <div class="px-8 py-6 max-h-96 overflow-y-auto">
+                    <div id="modalContent" class="space-y-6">
+                        <!-- Content will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Modal Actions -->
+                <div class="bg-gray-50/80 px-8 py-6 border-t border-gray-200/50">
+                    <div id="modalActions" class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4">
+                        <!-- Actions will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRegistrations = [];
+        let currentFilter = 'all';
+
+        // Load registrations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRegistrations();
+        });
+
+        async function loadRegistrations() {
+            try {
+                const response = await fetch('/api/admin/pharmacy-registrations', {
+                    headers: {
+                        'Authorization': 'Bearer ' + getToken()
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load registrations');
+                }
+
+                const data = await response.json();
+                currentRegistrations = data.data.registrations;
+                
+                updateStats(data.data.stats);
+                displayRegistrations(currentRegistrations);
+            } catch (error) {
+                console.error('Error loading registrations:', error);
+                showNotification('Error loading registrations', 'error');
+            }
+        }
+
+        function updateStats(stats) {
+            document.getElementById('totalRegistrations').textContent = stats.total;
+            document.getElementById('pendingRegistrations').textContent = stats.pending;
+            document.getElementById('approvedRegistrations').textContent = stats.approved;
+            document.getElementById('rejectedRegistrations').textContent = stats.rejected;
+        }
+
+        function filterRegistrations(status) {
+            currentFilter = status;
+            
+            // Update tab styles
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('border-primary-500', 'text-primary-600');
+                tab.classList.add('border-transparent', 'text-gray-500');
+            });
+            
+            const activeTab = document.querySelector(`[data-filter="${status}"]`);
+            activeTab.classList.remove('border-transparent', 'text-gray-500');
+            activeTab.classList.add('border-primary-500', 'text-primary-600');
+
+            // Filter registrations
+            let filteredRegistrations = currentRegistrations;
+            if (status !== 'all') {
+                filteredRegistrations = currentRegistrations.filter(r => r.registration_status === status);
+            }
+
+            displayRegistrations(filteredRegistrations);
+        }
+
+        function displayRegistrations(registrations) {
+            const container = document.getElementById('registrationsList');
+            
+            if (registrations.length === 0) {
+                container.innerHTML = `
+                    <div class="px-6 py-12 text-center">
+                        <span class="text-4xl mb-4 block">📋</span>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">No registrations found</h3>
+                        <p class="text-gray-500">There are no pharmacy registrations matching your filter.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = registrations.map(registration => `
+                <div class="px-6 py-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3">
+                                <h3 class="text-lg font-medium text-gray-900">${registration.pharmacy_name}</h3>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(registration.registration_status)}">
+                                    ${registration.registration_status}
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-1">${registration.address}, ${registration.city}, ${registration.state}</p>
+                            <p class="text-sm text-gray-500 mt-1">Submitted by: ${registration.first_name} ${registration.last_name} (${registration.user_email})</p>
+                            <p class="text-sm text-gray-500">Submitted: ${new Date(registration.created_at).toLocaleDateString()}</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="viewRegistration(${registration.id})" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                View Details
+                            </button>
+                            ${registration.registration_status === 'pending' ? `
+                                <button onclick="approveRegistration(${registration.id})" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm">
+                                    Approve
+                                </button>
+                                <button onclick="rejectRegistration(${registration.id})" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm">
+                                    Reject
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusBadgeClass(status) {
+            switch (status) {
+                case 'pending': return 'bg-yellow-100 text-yellow-800';
+                case 'approved': return 'bg-green-100 text-green-800';
+                case 'rejected': return 'bg-red-100 text-red-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        async function viewRegistration(registrationId) {
+            try {
+                const response = await fetch(`/api/admin/pharmacy-registrations/${registrationId}`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + getToken()
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load registration details');
+                }
+
+                const data = await response.json();
+                const registration = data.data;
+
+                document.getElementById('modalTitle').textContent = registration.pharmacy_name;
+                
+                document.getElementById('modalContent').innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-medium text-gray-900 mb-2">Pharmacy Information</h4>
+                            <div class="space-y-2 text-sm">
+                                <p><strong>Name:</strong> ${registration.pharmacy_name}</p>
+                                <p><strong>License:</strong> ${registration.license_number || 'N/A'}</p>
+                                <p><strong>Address:</strong> ${registration.address}</p>
+                                <p><strong>City:</strong> ${registration.city}, ${registration.state}</p>
+                                <p><strong>Phone:</strong> ${registration.phone}</p>
+                                <p><strong>Email:</strong> ${registration.email || 'N/A'}</p>
+                                <p><strong>Operating Hours:</strong> ${registration.operating_hours || 'N/A'}</p>
+                                <p><strong>Status:</strong> <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusBadgeClass(registration.registration_status)}">${registration.registration_status}</span></p>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-900 mb-2">Pharmacist Information</h4>
+                            <div class="space-y-2 text-sm">
+                                <p><strong>Name:</strong> ${registration.first_name} ${registration.last_name}</p>
+                                <p><strong>Email:</strong> ${registration.user_email}</p>
+                                <p><strong>Submitted:</strong> ${new Date(registration.created_at).toLocaleString()}</p>
+                                ${registration.admin_notes ? `<p><strong>Admin Notes:</strong> ${registration.admin_notes}</p>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    ${registration.inventory && registration.inventory.length > 0 ? `
+                        <div class="mt-6">
+                            <h4 class="font-medium text-gray-900 mb-2">Inventory (${registration.inventory.length} items)</h4>
+                            <div class="bg-gray-50 rounded-lg p-4 max-h-60 overflow-y-auto">
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    ${registration.inventory.map(item => `
+                                        <div class="bg-white p-3 rounded border">
+                                            <p class="font-medium text-sm">${item.drug_name}</p>
+                                            <p class="text-xs text-gray-600">${item.generic_name || 'N/A'}</p>
+                                            <p class="text-xs text-gray-600">Qty: ${item.quantity} | Price: $${item.price}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    ` : '<p class="text-gray-500 mt-4">No inventory items added</p>'}
+                `;
+
+                // Show/hide action buttons based on status
+                const actionsContainer = document.getElementById('modalActions');
+                if (registration.registration_status === 'pending') {
+                    actionsContainer.innerHTML = `
+                        <button onclick="approveRegistration(${registration.id})" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            Approve Registration
+                        </button>
+                        <button onclick="rejectRegistration(${registration.id})" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                            Reject Registration
+                        </button>
+                    `;
+                } else {
+                    actionsContainer.innerHTML = `
+                        <button onclick="closeModal()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                            Close
+                        </button>
+                    `;
+                }
+
+                document.getElementById('registrationModal').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error viewing registration:', error);
+                showNotification('Error loading registration details', 'error');
+            }
+        }
+
+        async function approveRegistration(registrationId) {
+            if (!confirm('Are you sure you want to approve this pharmacy registration?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/admin/pharmacy-registrations/${registrationId}/approve`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + getToken()
+                    },
+                    body: JSON.stringify({
+                        admin_notes: prompt('Add any admin notes (optional):') || null
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to approve registration');
+                }
+
+                const data = await response.json();
+                showNotification('Pharmacy registration approved successfully!', 'success');
+                closeModal();
+                loadRegistrations();
+            } catch (error) {
+                console.error('Error approving registration:', error);
+                showNotification('Error approving registration', 'error');
+            }
+        }
+
+        async function rejectRegistration(registrationId) {
+            const adminNotes = prompt('Please provide a reason for rejection:');
+            if (!adminNotes) {
+                alert('Admin notes are required for rejection');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to reject this pharmacy registration?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/admin/pharmacy-registrations/${registrationId}/reject`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + getToken()
+                    },
+                    body: JSON.stringify({
+                        admin_notes: adminNotes
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to reject registration');
+                }
+
+                const data = await response.json();
+                showNotification('Pharmacy registration rejected', 'success');
+                closeModal();
+                loadRegistrations();
+            } catch (error) {
+                console.error('Error rejecting registration:', error);
+                showNotification('Error rejecting registration', 'error');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('registrationModal').classList.add('hidden');
+        }
+
+        function showNotification(message, type) {
+            // Simple notification - you can enhance this with a proper notification library
+            alert(message);
+        }
+
+        function getToken() {
+            // In a real app, you'd get this from localStorage or a secure cookie
+            // For demo purposes, we'll use a placeholder
+            return 'demo-admin-token';
+        }
+
+        function logout() {
+            // In a real app, you'd clear the token and redirect to login
+            alert('Logout functionality would be implemented here');
+        }
+
+        // Load real dashboard statistics
+        async function loadDashboardStats() {
+            try {
+                const response = await fetch('/api/admin/dashboard-stats', {
+                    headers: {
+                        'Authorization': 'Bearer ' + getToken()
+                    }
+                });
+                
+                if (response.ok) {
+                    const stats = await response.json();
+                    
+                    // Update header quick stats
+                    document.getElementById('totalPharmacies').textContent = stats.pharmacies.total || 0;
+                    document.getElementById('activeUsers').textContent = stats.totalUsers || 0;
+                    document.getElementById('pendingApprovals').textContent = stats.pharmacies.pending || 0;
+                    
+                    // Update main stats cards
+                    document.getElementById('totalRegistrations').textContent = stats.pharmacies.total || 0;
+                    document.getElementById('pendingRegistrations').textContent = stats.pharmacies.pending || 0;
+                    document.getElementById('approvedRegistrations').textContent = stats.pharmacies.approved || 0;
+                    document.getElementById('rejectedRegistrations').textContent = stats.pharmacies.rejected || 0;
+                    
+                    // Update change indicators
+                    document.getElementById('totalRegistrationsChange').textContent = 
+                        stats.pharmacies.total > 0 ? `${stats.pharmacies.total} total` : 'No registrations yet';
+                    document.getElementById('pendingRegistrationsChange').textContent = 
+                        stats.pharmacies.pending > 0 ? `${stats.pharmacies.pending} pending` : 'No pending';
+                    document.getElementById('approvedRegistrationsChange').textContent = 
+                        stats.pharmacies.approved > 0 ? `${stats.pharmacies.approved} active` : 'No active pharmacies';
+                    document.getElementById('rejectedRegistrationsChange').textContent = 
+                        stats.pharmacies.rejected > 0 ? `${stats.pharmacies.rejected} rejected` : 'No rejections';
+                } else {
+                    console.error('Failed to load dashboard stats');
+                }
+            } catch (error) {
+                console.error('Error loading dashboard stats:', error);
+            }
+        }
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRegistrations();
+            loadDashboardStats();
+            
+            // Refresh stats every 30 seconds
+            setInterval(loadDashboardStats, 30000);
+        });
+    </script>
+</body>
+</html>

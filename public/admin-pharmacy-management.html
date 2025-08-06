@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharmacy Management - Miss AFUNGFE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+                            400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+                            800: '#1e40af', 900: '#1e3a8a'
+                        },
+                        medical: {
+                            50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac',
+                            400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d',
+                            800: '#166534', 900: '#14532d'
+                        },
+                        accent: {
+                            50: '#fffbeb', 100: '#fef3c7', 200: '#fde68a', 300: '#fcd34d',
+                            400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309',
+                            800: '#92400e', 900: '#78350f'
+                        },
+                        admin: {
+                            50: '#fdf4ff', 100: '#fae8ff', 200: '#f5d0fe', 300: '#f0abfc',
+                            400: '#e879f9', 500: '#d946ef', 600: '#c026d3', 700: '#a21caf',
+                            800: '#86198f', 900: '#701a75'
+                        }
+                    },
+                    fontFamily: { 'sans': ['Inter', 'ui-sans-serif', 'system-ui'] },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+                    },
+                    boxShadow: {
+                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+                        'strong': '0 10px 40px -10px rgba(0, 0, 0, 0.1), 0 2px 10px -2px rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #d946ef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .admin-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #d946ef 50%, #22c55e 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-admin-50 font-sans">
+    <!-- Background Elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-64 h-64 bg-primary-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow"></div>
+        <div class="absolute top-40 right-20 w-80 h-80 bg-admin-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style="animation-delay: 1s;"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="relative bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-soft sticky top-0 z-40">
+        <div class="absolute inset-0 admin-gradient opacity-10"></div>
+        <div class="relative max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-500 to-admin-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+                        <div class="relative w-14 h-14 bg-gradient-to-r from-primary-500 to-admin-500 rounded-2xl flex items-center justify-center transform group-hover:scale-105 transition-transform duration-300 shadow-strong">
+                            <i class="fas fa-hospital text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold gradient-text">Pharmacy Management</h1>
+                        <p class="text-sm text-gray-600 font-medium">Field Registration & Inventory System</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="admin.html" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative max-w-7xl mx-auto px-6 py-8">
+        <!-- Action Navigation -->
+        <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-strong border border-white/20 mb-8 animate-fade-in">
+            <h3 class="text-xl font-bold text-gray-800 mb-6 text-center">Pharmacy Management Actions</h3>
+            <div class="grid md:grid-cols-3 gap-6">
+                <a href="admin-register-pharmacy.html" class="group relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary-400 to-primary-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+                    <div class="relative bg-white rounded-2xl p-6 shadow-soft border border-white/20 hover:transform hover:scale-105 transition-all duration-300 text-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-primary-400 to-primary-500 rounded-2xl flex items-center justify-center shadow-soft mx-auto mb-4">
+                            <i class="fas fa-hospital text-white text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-800 mb-2">Register Pharmacy</h4>
+                        <p class="text-sm text-gray-600">Add new pharmacy during field visit</p>
+                    </div>
+                </a>
+                <a href="admin-drug-management.html" class="group relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-medical-400 to-medical-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+                    <div class="relative bg-white rounded-2xl p-6 shadow-soft border border-white/20 hover:transform hover:scale-105 transition-all duration-300 text-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-medical-400 to-medical-500 rounded-2xl flex items-center justify-center shadow-soft mx-auto mb-4">
+                            <i class="fas fa-pills text-white text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-800 mb-2">Manage Drugs</h4>
+                        <p class="text-sm text-gray-600">Add drugs to pharmacy inventory</p>
+                    </div>
+                </a>
+                <div class="group relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-accent-400 to-accent-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+                    <div class="relative bg-white rounded-2xl p-6 shadow-soft border border-white/20 hover:transform hover:scale-105 transition-all duration-300 text-center cursor-pointer" onclick="showPharmacyDatabase()">
+                        <div class="w-16 h-16 bg-gradient-to-r from-accent-400 to-accent-500 rounded-2xl flex items-center justify-center shadow-soft mx-auto mb-4">
+                            <i class="fas fa-database text-white text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-800 mb-2">View Database</h4>
+                        <p class="text-sm text-gray-600">Browse registered pharmacies</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pharmacy Database Tab -->
+        <div id="database-tab" class="tab-content">
+            <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-strong border border-white/20 mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Registered Pharmacies</h2>
+                    <div class="flex items-center space-x-4">
+                        <input type="text" id="searchPharmacies" placeholder="Search pharmacies..." class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        <button onclick="refreshPharmacyList()" class="px-4 py-2 bg-primary-500 text-white rounded-xl hover:bg-primary-600 transition-colors">
+                            <i class="fas fa-refresh mr-2"></i>Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pharmacy List -->
+                <div id="pharmacyList" class="space-y-4">
+                    <!-- Pharmacy cards will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Register New Pharmacy Tab -->
+        <div id="register-tab" class="tab-content hidden">
+            <form id="pharmacyRegistrationForm" class="space-y-8">
+                <!-- Basic Information -->
+                <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-strong border border-white/20">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-info-circle text-primary-500 mr-3"></i>
+                        Basic Information
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Pharmacy Name</label>
+                            <input type="text" id="pharmacyName" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Owner Name</label>
+                            <input type="text" id="ownerName" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                            <input type="email" id="email" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+                            <input type="tel" id="phone" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Address</label>
+                            <textarea id="address" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GPS Location -->
+                <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-strong border border-white/20">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-map-marker-alt text-medical-500 mr-3"></i>
+                        GPS Location
+                    </h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Latitude</label>
+                            <input type="number" id="latitude" step="any" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Longitude</label>
+                            <input type="number" id="longitude" step="any" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-transparent">
+                        </div>
+                        <div class="flex items-end">
+                            <button type="button" onclick="getCurrentGPSLocation()" class="w-full px-4 py-3 bg-medical-500 text-white rounded-xl hover:bg-medical-600 transition-colors">
+                                <i class="fas fa-crosshairs mr-2"></i>Get Current Location
+                            </button>
+                        </div>
+                    </div>
+                    <div id="locationStatus" class="mt-4 text-sm text-gray-600"></div>
+                </div>
+
+                <!-- Inventory Section -->
+                <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-strong border border-white/20">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold text-gray-800 flex items-center">
+                            <i class="fas fa-pills text-accent-500 mr-3"></i>
+                            Initial Inventory
+                        </h3>
+                        <button type="button" onclick="addDrugRow()" class="px-4 py-2 bg-accent-500 text-white rounded-xl hover:bg-accent-600 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Add Drug
+                        </button>
+                    </div>
+                    <div id="inventoryContainer" class="space-y-4">
+                        <!-- Drug rows will be added here -->
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="px-12 py-4 bg-gradient-to-r from-primary-500 via-primary-600 to-medical-500 text-white rounded-2xl font-bold text-lg hover:from-primary-600 hover:via-primary-700 hover:to-medical-600 transition-all duration-300 transform hover:scale-105 shadow-strong">
+                        <i class="fas fa-save mr-3"></i>Register Pharmacy & Send Credentials
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- View Pharmacy Modal -->
+    <div id="viewPharmacyModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-10 mx-auto p-6 w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 max-w-4xl">
+            <div class="bg-white rounded-3xl p-8 shadow-strong">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-800">Pharmacy Details</h3>
+                    <button onclick="closeModal('viewPharmacyModal')" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div id="pharmacyDetails">
+                    <!-- Pharmacy details will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'database';
+        let drugRowCounter = 0;
+        let pharmacies = [];
+
+        // Tab Management
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-primary-600', 'bg-primary-50', 'shadow-sm');
+                btn.classList.add('text-gray-600');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            const activeBtn = document.getElementById('tab-' + tabName);
+            activeBtn.classList.add('text-primary-600', 'bg-primary-50', 'shadow-sm');
+            activeBtn.classList.remove('text-gray-600');
+
+            currentTab = tabName;
+
+            if (tabName === 'database') {
+                loadPharmacyDatabase();
+            }
+        }
+
+        // GPS Location
+        function getCurrentGPSLocation() {
+            const statusDiv = document.getElementById('locationStatus');
+            statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Getting location...';
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        document.getElementById('latitude').value = position.coords.latitude.toFixed(6);
+                        document.getElementById('longitude').value = position.coords.longitude.toFixed(6);
+                        statusDiv.innerHTML = '<i class="fas fa-check-circle text-green-500 mr-2"></i>Location captured successfully!';
+                    },
+                    function(error) {
+                        statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>Error getting location: ' + error.message;
+                    }
+                );
+            } else {
+                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>Geolocation is not supported by this browser.';
+            }
+        }
+
+        // Inventory Management
+        function addDrugRow() {
+            drugRowCounter++;
+            const container = document.getElementById('inventoryContainer');
+            const drugRow = document.createElement('div');
+            drugRow.className = 'grid md:grid-cols-5 gap-4 p-4 bg-gray-50 rounded-xl';
+            drugRow.id = `drugRow${drugRowCounter}`;
+            
+            drugRow.innerHTML = `
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Drug Name</label>
+                    <input type="text" name="drugName[]" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Price (XAF)</label>
+                    <input type="number" name="drugPrice[]" step="1" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
+                    <input type="number" name="drugStock[]" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                    <input type="date" name="drugExpiry[]" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-transparent">
+                </div>
+                <div class="flex items-end">
+                    <button type="button" onclick="removeDrugRow(${drugRowCounter})" class="w-full px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            container.appendChild(drugRow);
+        }
+
+        function removeDrugRow(rowId) {
+            const row = document.getElementById(`drugRow${rowId}`);
+            if (row) {
+                row.remove();
+            }
+        }
+
+        // Load initial drug row
+        addDrugRow();
+
+        // Form Submission
+        document.getElementById('pharmacyRegistrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const pharmacyData = {
+                name: document.getElementById('pharmacyName').value,
+                ownerName: document.getElementById('ownerName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                latitude: parseFloat(document.getElementById('latitude').value),
+                longitude: parseFloat(document.getElementById('longitude').value),
+                inventory: []
+            };
+
+            // Collect inventory data
+            const drugNames = formData.getAll('drugName[]');
+            const drugPrices = formData.getAll('drugPrice[]');
+            const drugStocks = formData.getAll('drugStock[]');
+            const drugExpiries = formData.getAll('drugExpiry[]');
+
+            for (let i = 0; i < drugNames.length; i++) {
+                if (drugNames[i].trim()) {
+                    pharmacyData.inventory.push({
+                        name: drugNames[i],
+                        price: parseFloat(drugPrices[i]),
+                        stock: parseInt(drugStocks[i]),
+                        expiry: drugExpiries[i]
+                    });
+                }
+            }
+
+            try {
+                const response = await fetch('/api/admin/register-pharmacy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify(pharmacyData)
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert(`Pharmacy registered successfully! Temporary password sent to ${pharmacyData.email}`);
+                    this.reset();
+                    drugRowCounter = 0;
+                    document.getElementById('inventoryContainer').innerHTML = '';
+                    addDrugRow();
+                    showTab('database');
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('Error registering pharmacy: ' + error.message);
+            }
+        });
+
+        // Load Pharmacy Database
+        async function loadPharmacyDatabase() {
+            try {
+                const response = await fetch('/api/admin/pharmacies', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    }
+                });
+                
+                if (response.ok) {
+                    pharmacies = await response.json();
+                    displayPharmacies(pharmacies);
+                } else {
+                    console.error('Failed to load pharmacies');
+                }
+            } catch (error) {
+                console.error('Error loading pharmacies:', error);
+            }
+        }
+
+        function displayPharmacies(pharmaciesToShow) {
+            const container = document.getElementById('pharmacyList');
+            
+            if (pharmaciesToShow.length === 0) {
+                container.innerHTML = '<div class="text-center py-8 text-gray-500">No pharmacies found</div>';
+                return;
+            }
+
+            container.innerHTML = pharmaciesToShow.map(pharmacy => `
+                <div class="bg-white rounded-2xl p-6 shadow-soft border border-gray-200 hover:shadow-strong transition-all duration-300">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <h4 class="text-lg font-bold text-gray-800 mb-2">${pharmacy.name}</h4>
+                            <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-600">
+                                <div><i class="fas fa-user mr-2 text-primary-500"></i>Owner: ${pharmacy.owner_name}</div>
+                                <div><i class="fas fa-envelope mr-2 text-primary-500"></i>${pharmacy.email}</div>
+                                <div><i class="fas fa-phone mr-2 text-primary-500"></i>${pharmacy.phone}</div>
+                                <div><i class="fas fa-map-marker-alt mr-2 text-medical-500"></i>GPS: ${pharmacy.gps_lat}, ${pharmacy.gps_long}</div>
+                            </div>
+                            <div class="mt-3 text-sm text-gray-600">
+                                <i class="fas fa-map mr-2 text-accent-500"></i>${pharmacy.address}
+                            </div>
+                        </div>
+                        <div class="flex flex-col space-y-2 ml-4">
+                            <button onclick="viewPharmacy(${pharmacy.id})" class="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors text-sm">
+                                <i class="fas fa-eye mr-1"></i>View
+                            </button>
+                            <button onclick="editPharmacy(${pharmacy.id})" class="px-4 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 transition-colors text-sm">
+                                <i class="fas fa-edit mr-1"></i>Edit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function refreshPharmacyList() {
+            loadPharmacyDatabase();
+        }
+
+        // Search functionality
+        document.getElementById('searchPharmacies').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = pharmacies.filter(pharmacy => 
+                pharmacy.name.toLowerCase().includes(searchTerm) ||
+                pharmacy.owner_name.toLowerCase().includes(searchTerm) ||
+                pharmacy.address.toLowerCase().includes(searchTerm)
+            );
+            displayPharmacies(filtered);
+        });
+
+        function viewPharmacy(pharmacyId) {
+            // Implementation for viewing pharmacy details
+            console.log('View pharmacy:', pharmacyId);
+        }
+
+        function editPharmacy(pharmacyId) {
+            // Implementation for editing pharmacy
+            console.log('Edit pharmacy:', pharmacyId);
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('database');
+        });
+    </script>
+</body>
+</html>

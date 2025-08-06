@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Geopharm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50: '#f0fdf4', 500: '#22c55e', 600: '#16a34a' },
+                        secondary: { 50: '#f8fafc', 600: '#475569', 800: '#1e293b' },
+                        accent: { 50: '#fef7ff', 500: '#d946ef', 600: '#c026d3' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50">
+    <!-- Navigation -->
+    <nav class="py-4 bg-white/80 backdrop-blur-sm border-b border-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-primary-500 to-accent-500 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-comments text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-secondary-800">Geopharm Chat</h1>
+                        <p class="text-sm text-secondary-500">Communication Hub</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="goBack()" class="text-secondary-600 hover:text-primary-600 transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                    </button>
+                    <button onclick="logout()" class="text-secondary-600 hover:text-red-600 transition-colors">
+                        <i class="fas fa-sign-out-alt text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Chat Interface -->
+    <div class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid lg:grid-cols-4 gap-8 h-[calc(100vh-200px)]">
+                <!-- Chat List Sidebar -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-3xl p-6 shadow-lg border border-gray-100 h-full flex flex-col">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-bold text-secondary-800">Conversations</h3>
+                            <button onclick="startNewChat()" class="bg-gradient-to-r from-primary-500 to-accent-500 text-white p-2 rounded-xl hover:shadow-lg transition-all">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Search Chats -->
+                        <div class="mb-4">
+                            <input type="text" id="searchChats" placeholder="Search conversations..." class="w-full px-4 py-2 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        </div>
+                        
+                        <!-- Chat List -->
+                        <div class="flex-1 overflow-y-auto space-y-2" id="chatList">
+                            <!-- Chat items will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Window -->
+                <div class="lg:col-span-3">
+                    <div class="bg-white rounded-3xl shadow-lg border border-gray-100 h-full flex flex-col">
+                        <!-- Chat Header -->
+                        <div class="p-6 border-b border-gray-100" id="chatHeader">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-primary-600 text-xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-secondary-800" id="chatPartnerName">Select a conversation</h4>
+                                    <p class="text-sm text-secondary-500" id="chatPartnerStatus">Choose from the list to start chatting</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button class="text-secondary-400 hover:text-primary-600 transition-colors p-2">
+                                        <i class="fas fa-phone"></i>
+                                    </button>
+                                    <button class="text-secondary-400 hover:text-primary-600 transition-colors p-2">
+                                        <i class="fas fa-video"></i>
+                                    </button>
+                                    <button class="text-secondary-400 hover:text-primary-600 transition-colors p-2">
+                                        <i class="fas fa-info-circle"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Messages Area -->
+                        <div class="flex-1 p-6 overflow-y-auto" id="messagesContainer">
+                            <div class="text-center text-secondary-400 mt-20" id="emptyState">
+                                <i class="fas fa-comments text-6xl mb-4 opacity-50"></i>
+                                <h3 class="text-xl font-semibold mb-2">Welcome to Geopharm Chat</h3>
+                                <p>Select a conversation to start chatting with pharmacists or clients</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Message Input -->
+                        <div class="p-6 border-t border-gray-100" id="messageInputArea">
+                            <div class="flex items-center space-x-4">
+                                <button class="text-secondary-400 hover:text-primary-600 transition-colors p-2">
+                                    <i class="fas fa-paperclip"></i>
+                                </button>
+                                <div class="flex-1 relative">
+                                    <input type="text" id="messageInput" placeholder="Type your message..." class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent pr-12" disabled>
+                                    <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-secondary-400 hover:text-accent-600 transition-colors">
+                                        <i class="fas fa-smile"></i>
+                                    </button>
+                                </div>
+                                <button onclick="sendMessage()" id="sendBtn" class="bg-gradient-to-r from-primary-500 to-accent-500 text-white p-3 rounded-2xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Chat Modal -->
+    <div id="newChatModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-secondary-800">Start New Chat</h3>
+                <button onclick="closeNewChatModal()" class="text-secondary-400 hover:text-secondary-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-secondary-700 mb-2">Search for pharmacies or users</label>
+                    <input type="text" id="searchUsers" placeholder="Type to search..." class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500">
+                </div>
+                
+                <div class="max-h-60 overflow-y-auto" id="searchResults">
+                    <div class="text-center text-secondary-400 py-8">
+                        <i class="fas fa-search text-3xl mb-2"></i>
+                        <p>Start typing to search for pharmacies or users</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentChat = null;
+        let userType = localStorage.getItem('userType') || 'client';
+        let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+
+        // Sample chat data
+        let chats = [
+            {
+                id: 1,
+                name: "Central Pharmacy",
+                type: "pharmacist",
+                avatar: "fas fa-hospital",
+                lastMessage: "We have Paracetamol in stock. Would you like to reserve it?",
+                time: "2 min ago",
+                unread: 2,
+                online: true,
+                messages: [
+                    { id: 1, sender: "them", message: "Hello! How can I help you today?", time: "10:30 AM" },
+                    { id: 2, sender: "me", message: "Hi, do you have Paracetamol in stock?", time: "10:32 AM" },
+                    { id: 3, sender: "them", message: "Yes, we have Paracetamol available. 500mg tablets, ₦500 per pack.", time: "10:33 AM" },
+                    { id: 4, sender: "them", message: "We have Paracetamol in stock. Would you like to reserve it?", time: "10:35 AM" }
+                ]
+            },
+            {
+                id: 2,
+                name: "Health Plus Pharmacy",
+                type: "pharmacist",
+                avatar: "fas fa-hospital",
+                lastMessage: "Thank you for your inquiry. We'll check our inventory.",
+                time: "1 hour ago",
+                unread: 0,
+                online: false,
+                messages: [
+                    { id: 1, sender: "me", message: "Do you have antibiotics available?", time: "9:15 AM" },
+                    { id: 2, sender: "them", message: "Thank you for your inquiry. We'll check our inventory.", time: "9:20 AM" }
+                ]
+            },
+            {
+                id: 3,
+                name: "Dr. Sarah Johnson",
+                type: "pharmacist",
+                avatar: "fas fa-user-md",
+                lastMessage: "The medication should be taken with food.",
+                time: "3 hours ago",
+                unread: 1,
+                online: true,
+                messages: [
+                    { id: 1, sender: "them", message: "Hello! I see you're looking for medication guidance.", time: "7:45 AM" },
+                    { id: 2, sender: "me", message: "Yes, I need advice on taking my prescribed medication.", time: "7:50 AM" },
+                    { id: 3, sender: "them", message: "The medication should be taken with food.", time: "7:52 AM" }
+                ]
+            }
+        ];
+
+        // If user is pharmacist, show client chats instead
+        if (userType === 'pharmacist') {
+            chats = [
+                {
+                    id: 1,
+                    name: "John Doe",
+                    type: "client",
+                    avatar: "fas fa-user",
+                    lastMessage: "Thank you for the information!",
+                    time: "5 min ago",
+                    unread: 0,
+                    online: true,
+                    messages: [
+                        { id: 1, sender: "them", message: "Hi, do you have Paracetamol in stock?", time: "10:30 AM" },
+                        { id: 2, sender: "me", message: "Yes, we have Paracetamol available. 500mg tablets, ₦500 per pack.", time: "10:32 AM" },
+                        { id: 3, sender: "them", message: "Thank you for the information!", time: "10:35 AM" }
+                    ]
+                },
+                {
+                    id: 2,
+                    name: "Mary Johnson",
+                    type: "client",
+                    avatar: "fas fa-user",
+                    lastMessage: "What's the price for Vitamin C?",
+                    time: "2 hours ago",
+                    unread: 1,
+                    online: false,
+                    messages: [
+                        { id: 1, sender: "them", message: "What's the price for Vitamin C?", time: "8:30 AM" }
+                    ]
+                }
+            ];
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderChatList();
+            setupEventListeners();
+        });
+
+        function renderChatList() {
+            const container = document.getElementById('chatList');
+            container.innerHTML = chats.map(chat => `
+                <div onclick="selectChat(${chat.id})" class="flex items-center space-x-3 p-4 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors ${currentChat === chat.id ? 'bg-primary-50 border border-primary-200' : ''}" data-chat-id="${chat.id}">
+                    <div class="relative">
+                        <div class="w-12 h-12 ${chat.type === 'client' ? 'bg-primary-100' : 'bg-accent-100'} rounded-full flex items-center justify-center">
+                            <i class="${chat.avatar} ${chat.type === 'client' ? 'text-primary-600' : 'text-accent-600'}"></i>
+                        </div>
+                        ${chat.online ? '<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>' : ''}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between mb-1">
+                            <p class="font-semibold text-secondary-800 truncate">${chat.name}</p>
+                            <span class="text-xs text-secondary-500">${chat.time}</span>
+                        </div>
+                        <p class="text-sm text-secondary-600 truncate">${chat.lastMessage}</p>
+                    </div>
+                    ${chat.unread > 0 ? `<div class="w-5 h-5 bg-accent-500 text-white text-xs rounded-full flex items-center justify-center">${chat.unread}</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function selectChat(chatId) {
+            currentChat = chatId;
+            const chat = chats.find(c => c.id === chatId);
+            
+            // Update chat header
+            const header = document.getElementById('chatHeader');
+            header.innerHTML = `
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <div class="w-12 h-12 ${chat.type === 'client' ? 'bg-primary-100' : 'bg-accent-100'} rounded-full flex items-center justify-center">
+                            <i class="${chat.avatar} ${chat.type === 'client' ? 'text-primary-600' : 'text-accent-600'} text-xl"></i>
+                        </div>
+                        ${chat.online ? '<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>' : ''}
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-secondary-800">${chat.name}</h4>
+                        <p class="text-sm text-secondary-500">${chat.online ? 'Online' : 'Last seen ' + chat.time}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="text-secondary-400 hover:text-primary-600 transition-colors p-2">
+                            <i class="fas fa-phone"></i>
+                        </button>
+                        <button class="text-secondary-400 hover:text-primary-600 transition-colors p-2">
+                            <i class="fas fa-video"></i>
+                        </button>
+                        <button class="text-secondary-400 hover:text-primary-600 transition-colors p-2">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Render messages
+            renderMessages(chat.messages);
+            
+            // Enable message input
+            document.getElementById('messageInput').disabled = false;
+            document.getElementById('sendBtn').disabled = false;
+            
+            // Hide empty state
+            document.getElementById('emptyState').style.display = 'none';
+            
+            // Update chat list selection
+            renderChatList();
+        }
+
+        function renderMessages(messages) {
+            const container = document.getElementById('messagesContainer');
+            container.innerHTML = messages.map(message => `
+                <div class="flex ${message.sender === 'me' ? 'justify-end' : 'justify-start'} mb-4">
+                    <div class="max-w-xs lg:max-w-md">
+                        <div class="px-4 py-3 rounded-2xl ${message.sender === 'me' ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white' : 'bg-gray-100 text-secondary-800'}">
+                            <p>${message.message}</p>
+                        </div>
+                        <p class="text-xs text-secondary-400 mt-1 ${message.sender === 'me' ? 'text-right' : 'text-left'}">${message.time}</p>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Scroll to bottom
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message || !currentChat) return;
+            
+            const chat = chats.find(c => c.id === currentChat);
+            const newMessage = {
+                id: chat.messages.length + 1,
+                sender: 'me',
+                message: message,
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            };
+            
+            chat.messages.push(newMessage);
+            chat.lastMessage = message;
+            chat.time = 'Just now';
+            
+            renderMessages(chat.messages);
+            renderChatList();
+            
+            input.value = '';
+            
+            // Simulate response (in real app, this would be real-time)
+            setTimeout(() => {
+                const responses = [
+                    "Thank you for your message. Let me check that for you.",
+                    "I'll get back to you shortly with the information.",
+                    "Is there anything else I can help you with?",
+                    "That's a great question. Let me provide you with the details."
+                ];
+                const response = {
+                    id: chat.messages.length + 1,
+                    sender: 'them',
+                    message: responses[Math.floor(Math.random() * responses.length)],
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                };
+                chat.messages.push(response);
+                chat.lastMessage = response.message;
+                renderMessages(chat.messages);
+                renderChatList();
+            }, 2000);
+        }
+
+        function setupEventListeners() {
+            // Enter key to send message
+            document.getElementById('messageInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            // Search chats
+            document.getElementById('searchChats').addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+                const filteredChats = chats.filter(chat => 
+                    chat.name.toLowerCase().includes(query) || 
+                    chat.lastMessage.toLowerCase().includes(query)
+                );
+                // Re-render with filtered results
+                renderFilteredChatList(filteredChats);
+            });
+        }
+
+        function renderFilteredChatList(filteredChats) {
+            const container = document.getElementById('chatList');
+            container.innerHTML = filteredChats.map(chat => `
+                <div onclick="selectChat(${chat.id})" class="flex items-center space-x-3 p-4 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors ${currentChat === chat.id ? 'bg-primary-50 border border-primary-200' : ''}" data-chat-id="${chat.id}">
+                    <div class="relative">
+                        <div class="w-12 h-12 ${chat.type === 'client' ? 'bg-primary-100' : 'bg-accent-100'} rounded-full flex items-center justify-center">
+                            <i class="${chat.avatar} ${chat.type === 'client' ? 'text-primary-600' : 'text-accent-600'}"></i>
+                        </div>
+                        ${chat.online ? '<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>' : ''}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between mb-1">
+                            <p class="font-semibold text-secondary-800 truncate">${chat.name}</p>
+                            <span class="text-xs text-secondary-500">${chat.time}</span>
+                        </div>
+                        <p class="text-sm text-secondary-600 truncate">${chat.lastMessage}</p>
+                    </div>
+                    ${chat.unread > 0 ? `<div class="w-5 h-5 bg-accent-500 text-white text-xs rounded-full flex items-center justify-center">${chat.unread}</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function startNewChat() {
+            document.getElementById('newChatModal').classList.remove('hidden');
+        }
+
+        function closeNewChatModal() {
+            document.getElementById('newChatModal').classList.add('hidden');
+        }
+
+        function goBack() {
+            if (userType === 'pharmacist') {
+                window.location.href = '/pharmacist-dashboard.html';
+            } else {
+                window.location.href = '/client-dashboard.html';
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = '/home.html';
+            }
+        }
+
+        // Check authentication
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/login.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,684 @@
+    <!-- Pharmacy Details Modal -->
+    <div id="pharmacyModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-8">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-hospital text-primary-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h2 id="modalPharmacyName" class="text-3xl font-bold text-secondary-800">Pharmacy Name</h2>
+                            <p id="modalPharmacyAddress" class="text-secondary-600">Address</p>
+                        </div>
+                    </div>
+                    <button onclick="closePharmacyModal()" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
+                        <i class="fas fa-times text-gray-600"></i>
+                    </button>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Left Column: Pharmacy Info & Inventory -->
+                    <div class="space-y-6">
+                        <!-- Contact Information -->
+                        <div class="bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl p-6">
+                            <h3 class="text-xl font-bold text-secondary-800 mb-4">Contact Information</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-phone text-primary-600"></i>
+                                    <span id="modalPharmacyPhone" class="text-secondary-700">Phone</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-map-marker-alt text-primary-600"></i>
+                                    <span id="modalPharmacyDistance" class="text-secondary-700">Distance</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-clock text-primary-600"></i>
+                                    <span class="text-secondary-700">Open: 8:00 AM - 8:00 PM</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-3 mt-4">
+                                <button id="modalCallBtn" onclick="callPharmacy('')" class="flex-1 bg-primary-500 text-white py-3 px-4 rounded-xl hover:bg-primary-600 transition-colors">
+                                    <i class="fas fa-phone mr-2"></i>Call Now
+                                </button>
+                                <button onclick="registerToChat()" class="flex-1 bg-accent-500 text-white py-3 px-4 rounded-xl hover:bg-accent-600 transition-colors">
+                                    <i class="fas fa-user-plus mr-2"></i>Register to Chat
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Pharmacy Inventory -->
+                        <div class="bg-white border border-gray-200 rounded-2xl p-6">
+                            <h3 class="text-xl font-bold text-secondary-800 mb-4">Available Medications</h3>
+                            <div class="space-y-3 max-h-64 overflow-y-auto" id="pharmacyInventory">
+                                <!-- Inventory items will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Map -->
+                    <div class="space-y-6">
+                        <div class="bg-gray-100 rounded-2xl p-4">
+                            <h3 class="text-xl font-bold text-secondary-800 mb-4">Location</h3>
+                            <div id="pharmacyMap" class="w-full h-80 rounded-xl bg-gray-200 flex items-center justify-center">
+                                <div class="text-center text-gray-500">
+                                    <i class="fas fa-map-marked-alt text-4xl mb-2"></i>
+                                    <p>Interactive map will load here</p>
+                                </div>
+                            </div>
+                            <button onclick="getDirections()" class="w-full mt-4 bg-gradient-to-r from-primary-500 to-accent-500 text-white py-3 px-4 rounded-xl hover:from-primary-600 hover:to-accent-600 transition-all">
+                                <i class="fas fa-directions mr-2"></i>Get Directions
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include pharmacy data manager -->
+    <script src="/js/pharmacy-data.js"></script>
+    <script>
+        // Homepage Drug Search Functionality with Real Data
+        async function searchDrugsOnHomepage() {
+            const searchTerm = document.getElementById('drugSearchInput').value.trim();
+            if (!searchTerm) {
+                alert('Please enter a medication name to search');
+                return;
+            }
+
+            // Show loading state
+            const resultsContainer = document.getElementById('homepageSearchResults');
+            const pharmacyResults = document.getElementById('homepagePharmacyResults');
+            
+            pharmacyResults.innerHTML = `
+                <div class="flex items-center justify-center p-8">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+                    <span class="ml-3 text-secondary-600">Searching pharmacies...</span>
+                </div>
+            `;
+            resultsContainer.classList.remove('hidden');
+
+            // Wait for pharmacy data to load if not already loaded
+            let attempts = 0;
+            while (pharmacyDataManager.pharmacies.length === 0 && attempts < 10) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                attempts++;
+            }
+
+            // Search for drugs in pharmacies
+            const searchResults = pharmacyDataManager.searchDrugInPharmacies(searchTerm);
+            
+            if (searchResults.length === 0) {
+                pharmacyResults.innerHTML = `
+                    <div class="text-center p-8">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-search text-gray-400 text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-secondary-800 mb-2">No Results Found</h3>
+                        <p class="text-secondary-600">Sorry, "${searchTerm}" is not available in any nearby pharmacies.</p>
+                        <p class="text-sm text-secondary-500 mt-2">Try searching for a different medication or contact pharmacies directly.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Display results
+            pharmacyResults.innerHTML = searchResults.map(result => {
+                const { pharmacy, drug, distance, availability } = result;
+                const stockClass = availability === 'Out of Stock' ? 'bg-red-100 text-red-600' : 
+                                 availability.includes('Low Stock') ? 'bg-yellow-100 text-yellow-600' : 
+                                 'bg-green-100 text-green-600';
+                
+                return `
+                    <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1 cursor-pointer">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-hospital text-primary-600"></i>
+                            </div>
+                            <span class="text-xs px-3 py-1 rounded-full ${stockClass}">
+                                ${availability}
+                            </span>
+                        </div>
+                        <h4 class="font-bold text-secondary-800 mb-1">${pharmacy.name}</h4>
+                        <p class="text-sm font-medium text-primary-600 mb-2">${drug.name}</p>
+                        <p class="text-sm text-secondary-600 mb-3">${pharmacy.address}</p>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-secondary-500">Distance:</span>
+                                <span class="font-medium text-secondary-800">${distance}</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-secondary-500">Price:</span>
+                                <span class="font-bold text-primary-600">${pharmacyDataManager.formatPrice(drug.price, drug.currency)}</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-secondary-500">Category:</span>
+                                <span class="text-sm text-secondary-700">${drug.category}</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="callPharmacy('${pharmacy.phone}')" class="flex-1 bg-primary-100 text-primary-700 py-2 px-3 rounded-xl hover:bg-primary-200 transition-colors text-sm">
+                                <i class="fas fa-phone mr-1"></i>Call
+                            </button>
+                            <button onclick="viewPharmacyDetails('${pharmacy.id}', '${pharmacy.name}', '${pharmacy.address}', '${pharmacy.phone}', '${distance}')" class="flex-1 bg-accent-100 text-accent-700 py-2 px-3 rounded-xl hover:bg-accent-200 transition-colors text-sm">
+                                <i class="fas fa-info-circle mr-1"></i>View Details
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Scroll to results
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Enhanced Modal Functions with Real Data
+        function viewPharmacyDetails(pharmacyId, name, address, phone, distance) {
+            // Get full pharmacy data
+            const pharmacy = pharmacyDataManager.getPharmacyById(pharmacyId);
+            if (!pharmacy) {
+                alert('Pharmacy details not found');
+                return;
+            }
+
+            // Populate modal with pharmacy information
+            document.getElementById('modalPharmacyName').textContent = name;
+            document.getElementById('modalPharmacyAddress').textContent = address;
+            document.getElementById('modalPharmacyPhone').textContent = phone;
+            document.getElementById('modalPharmacyDistance').textContent = distance;
+            
+            // Update call button
+            const callBtn = document.getElementById('modalCallBtn');
+            callBtn.setAttribute('onclick', `callPharmacy('${phone}')`);
+            
+            // Load real pharmacy inventory
+            loadRealPharmacyInventory(pharmacyId);
+            
+            // Initialize map with real GPS coordinates
+            initializeRealPharmacyMap(pharmacy);
+            
+            // Show modal
+            document.getElementById('pharmacyModal').classList.remove('hidden');
+        }
+
+        function closePharmacyModal() {
+            document.getElementById('pharmacyModal').classList.add('hidden');
+        }
+
+        function loadRealPharmacyInventory(pharmacyId) {
+            const inventory = pharmacyDataManager.getPharmacyInventory(pharmacyId);
+            const inventoryContainer = document.getElementById('pharmacyInventory');
+            
+            if (inventory.length === 0) {
+                inventoryContainer.innerHTML = `
+                    <div class="text-center p-6">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-pills text-gray-400"></i>
+                        </div>
+                        <p class="text-secondary-600">No inventory data available</p>
+                    </div>
+                `;
+                return;
+            }
+
+            inventoryContainer.innerHTML = inventory.map(item => {
+                const stockStatus = pharmacyDataManager.getStockStatus(item.stock);
+                const stockClass = stockStatus === 'Out of Stock' ? 'bg-red-100 text-red-600' : 
+                                 stockStatus.includes('Low Stock') ? 'bg-yellow-100 text-yellow-600' : 
+                                 'bg-green-100 text-green-600';
+                
+                return `
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-pills text-primary-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-secondary-800">${item.name}</p>
+                                    <p class="text-sm text-secondary-500">${item.category}</p>
+                                    ${item.description ? `<p class="text-xs text-secondary-400">${item.description}</p>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-primary-600">${pharmacyDataManager.formatPrice(item.price, item.currency)}</p>
+                            <p class="text-xs px-2 py-1 rounded-full ${stockClass}">${stockStatus}</p>
+                            ${item.manufacturer ? `<p class="text-xs text-secondary-400 mt-1">${item.manufacturer}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function initializeRealPharmacyMap(pharmacy) {
+            const mapContainer = document.getElementById('pharmacyMap');
+            const { latitude, longitude } = pharmacy.coordinates;
+            
+            // Create a more detailed map display with real coordinates
+            mapContainer.innerHTML = `
+                <div class="w-full h-full bg-gradient-to-br from-primary-100 to-accent-100 rounded-xl flex flex-col items-center justify-center text-center p-6 relative overflow-hidden">
+                    <!-- Background pattern -->
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="grid grid-cols-8 gap-1 h-full">
+                            ${Array(64).fill().map(() => '<div class="bg-primary-600 rounded-sm"></div>').join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+                            <i class="fas fa-map-marker-alt text-primary-600 text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold text-secondary-800 mb-2">${pharmacy.name}</h4>
+                        <p class="text-secondary-600 text-sm mb-3">${pharmacy.address}</p>
+                        <div class="bg-white/90 rounded-lg p-3 text-xs mb-4">
+                            <p class="text-secondary-700 font-medium">GPS Coordinates:</p>
+                            <p class="text-primary-600 font-mono">${latitude.toFixed(4)}, ${longitude.toFixed(4)}</p>
+                        </div>
+                        
+                        <!-- Operating Hours -->
+                        ${pharmacy.operatingHours ? `
+                            <div class="bg-white/80 rounded-lg p-3 text-xs mb-3">
+                                <p class="text-secondary-700 font-medium mb-1">Today's Hours:</p>
+                                <p class="text-secondary-600">${getTodayHours(pharmacy.operatingHours)}</p>
+                            </div>
+                        ` : ''}
+                        
+                        <!-- Services -->
+                        ${pharmacy.services && pharmacy.services.length > 0 ? `
+                            <div class="bg-white/80 rounded-lg p-3 text-xs">
+                                <p class="text-secondary-700 font-medium mb-1">Services:</p>
+                                <div class="flex flex-wrap gap-1">
+                                    ${pharmacy.services.slice(0, 3).map(service => 
+                                        `<span class="bg-primary-100 text-primary-700 px-2 py-1 rounded-full text-xs">${service}</span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function getTodayHours(operatingHours) {
+            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            const today = days[new Date().getDay()];
+            return operatingHours[today] || 'Hours not available';
+        }
+
+        function getDirections() {
+            const pharmacyName = document.getElementById('modalPharmacyName').textContent;
+            const address = document.getElementById('modalPharmacyAddress').textContent;
+            
+            // Open Google Maps with directions using real coordinates
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const userLat = position.coords.latitude;
+                        const userLng = position.coords.longitude;
+                        const mapsUrl = `https://www.google.com/maps/dir/${userLat},${userLng}/${encodeURIComponent(address + ', Bamenda, Cameroon')}`;
+                        window.open(mapsUrl, '_blank');
+                    },
+                    (error) => {
+                        const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(address + ', Bamenda, Cameroon')}`;
+                        window.open(mapsUrl, '_blank');
+                    }
+                );
+            } else {
+                const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(address + ', Bamenda, Cameroon')}`;
+                window.open(mapsUrl, '_blank');
+            }
+        }
+
+        function callPharmacy(phone) {
+            window.open(`tel:${phone}`);
+        }
+
+        function registerToChat() {
+            window.location.href = '/register.html';
+        }
+
+        // Enhanced search with autocomplete suggestions
+        function setupSearchAutocomplete() {
+            const searchInput = document.getElementById('drugSearchInput');
+            let suggestionTimeout;
+            
+            searchInput.addEventListener('input', function(e) {
+                clearTimeout(suggestionTimeout);
+                const query = e.target.value.trim();
+                
+                if (query.length < 2) {
+                    hideSuggestions();
+                    return;
+                }
+                
+                suggestionTimeout = setTimeout(() => {
+                    const suggestions = pharmacyDataManager.getSearchSuggestions(query);
+                    showSuggestions(suggestions, query);
+                }, 300);
+            });
+        }
+
+        function showSuggestions(suggestions, query) {
+            let suggestionContainer = document.getElementById('searchSuggestions');
+            if (!suggestionContainer) {
+                suggestionContainer = document.createElement('div');
+                suggestionContainer.id = 'searchSuggestions';
+                suggestionContainer.className = 'absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-xl shadow-lg z-10 mt-1';
+                document.getElementById('drugSearchInput').parentNode.appendChild(suggestionContainer);
+            }
+            
+            if (suggestions.length === 0) {
+                hideSuggestions();
+                return;
+            }
+            
+            suggestionContainer.innerHTML = suggestions.map(suggestion => `
+                <div class="px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0" 
+                     onclick="selectSuggestion('${suggestion}')">
+                    <span class="text-secondary-800">${suggestion}</span>
+                </div>
+            `).join('');
+            
+            suggestionContainer.classList.remove('hidden');
+        }
+
+        function hideSuggestions() {
+            const suggestionContainer = document.getElementById('searchSuggestions');
+            if (suggestionContainer) {
+                suggestionContainer.classList.add('hidden');
+            }
+        }
+
+        function selectSuggestion(suggestion) {
+            document.getElementById('drugSearchInput').value = suggestion;
+            hideSuggestions();
+            searchDrugsOnHomepage();
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setupSearchAutocomplete();
+            
+            // Allow Enter key to trigger search
+            document.getElementById('drugSearchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    hideSuggestions();
+                    searchDrugsOnHomepage();
+                }
+            });
+            
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('#drugSearchInput') && !e.target.closest('#searchSuggestions')) {
+                    hideSuggestions();
+                }
+            });
+        });
+    </script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geopharm Bamenda - Find Drugs & Pharmacies Near You</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        accent: {
+                            50: '#fef7ff',
+                            100: '#fce7ff',
+                            200: '#f8d4fe',
+                            300: '#f0abfc',
+                            400: '#e879f9',
+                            500: '#d946ef',
+                            600: '#c026d3',
+                            700: '#a21caf',
+                            800: '#86198f',
+                            900: '#701a75',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+    <!-- ...existing code... -->
+            inventoryContainer.innerHTML = inventory.map(item => {
+                const stockStatus = pharmacyDataManager.getStockStatus(item.stock);
+                const stockClass = stockStatus === 'Out of Stock' ? 'bg-red-100 text-red-600' : 
+                                 stockStatus.includes('Low Stock') ? 'bg-yellow-100 text-yellow-600' : 
+                                 'bg-green-100 text-green-600';
+                
+                return `
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-pills text-primary-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-secondary-800">${item.name}</p>
+                                    <p class="text-sm text-secondary-500">${item.category}</p>
+                                    ${item.description ? `<p class="text-xs text-secondary-400">${item.description}</p>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-primary-600">${pharmacyDataManager.formatPrice(item.price, item.currency)}</p>
+                            <p class="text-xs px-2 py-1 rounded-full ${stockClass}">${stockStatus}</p>
+                            ${item.manufacturer ? `<p class="text-xs text-secondary-400 mt-1">${item.manufacturer}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function initializeRealPharmacyMap(pharmacy) {
+            const mapContainer = document.getElementById('pharmacyMap');
+            const { latitude, longitude } = pharmacy.coordinates;
+            
+            // Create a more detailed map display with real coordinates
+            mapContainer.innerHTML = `
+                <div class="w-full h-full bg-gradient-to-br from-primary-100 to-accent-100 rounded-xl flex flex-col items-center justify-center text-center p-6 relative overflow-hidden">
+                    <!-- Background pattern -->
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="grid grid-cols-8 gap-1 h-full">
+                            ${Array(64).fill().map(() => '<div class="bg-primary-600 rounded-sm"></div>').join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+                            <i class="fas fa-map-marker-alt text-primary-600 text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold text-secondary-800 mb-2">${pharmacy.name}</h4>
+                        <p class="text-secondary-600 text-sm mb-3">${pharmacy.address}</p>
+                        <div class="bg-white/90 rounded-lg p-3 text-xs mb-4">
+                            <p class="text-secondary-700 font-medium">GPS Coordinates:</p>
+                            <p class="text-primary-600 font-mono">${latitude.toFixed(4)}, ${longitude.toFixed(4)}</p>
+                        </div>
+                        
+                        <!-- Operating Hours -->
+                        ${pharmacy.operatingHours ? `
+                            <div class="bg-white/80 rounded-lg p-3 text-xs mb-3">
+                                <p class="text-secondary-700 font-medium mb-1">Today's Hours:</p>
+                                <p class="text-secondary-600">${getTodayHours(pharmacy.operatingHours)}</p>
+                            </div>
+                        ` : ''}
+                        
+                        <!-- Services -->
+                        ${pharmacy.services && pharmacy.services.length > 0 ? `
+                            <div class="bg-white/80 rounded-lg p-3 text-xs">
+                                <p class="text-secondary-700 font-medium mb-1">Services:</p>
+                                <div class="flex flex-wrap gap-1">
+                                    ${pharmacy.services.slice(0, 3).map(service => 
+                                        `<span class="bg-primary-100 text-primary-700 px-2 py-1 rounded-full text-xs">${service}</span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function getTodayHours(operatingHours) {
+            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            const today = days[new Date().getDay()];
+            return operatingHours[today] || 'Hours not available';
+        }
+
+        function getDirections() {
+            const pharmacyName = document.getElementById('modalPharmacyName').textContent;
+            const address = document.getElementById('modalPharmacyAddress').textContent;
+            
+            // Open Google Maps with directions using real coordinates
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const userLat = position.coords.latitude;
+                        const userLng = position.coords.longitude;
+                        const mapsUrl = `https://www.google.com/maps/dir/${userLat},${userLng}/${encodeURIComponent(address + ', Bamenda, Cameroon')}`;
+                        window.open(mapsUrl, '_blank');
+                    },
+                    (error) => {
+                        const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(address + ', Bamenda, Cameroon')}`;
+                        window.open(mapsUrl, '_blank');
+                    }
+                );
+            } else {
+                const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(address + ', Bamenda, Cameroon')}`;
+                window.open(mapsUrl, '_blank');
+            }
+        }
+
+        function callPharmacy(phone) {
+            window.open(`tel:${phone}`);
+        }
+
+        function registerToChat() {
+            window.location.href = '/register.html';
+        }
+
+        // Enhanced search with autocomplete suggestions
+        function setupSearchAutocomplete() {
+            const searchInput = document.getElementById('drugSearchInput');
+            let suggestionTimeout;
+            
+            searchInput.addEventListener('input', function(e) {
+                clearTimeout(suggestionTimeout);
+                const query = e.target.value.trim();
+                
+                if (query.length < 2) {
+                    hideSuggestions();
+                    return;
+                }
+                
+                suggestionTimeout = setTimeout(() => {
+                    const suggestions = pharmacyDataManager.getSearchSuggestions(query);
+                    showSuggestions(suggestions, query);
+                }, 300);
+            });
+        }
+
+        function showSuggestions(suggestions, query) {
+            let suggestionContainer = document.getElementById('searchSuggestions');
+            if (!suggestionContainer) {
+                suggestionContainer = document.createElement('div');
+                suggestionContainer.id = 'searchSuggestions';
+                suggestionContainer.className = 'absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-xl shadow-lg z-10 mt-1';
+                document.getElementById('drugSearchInput').parentNode.appendChild(suggestionContainer);
+            }
+            
+            if (suggestions.length === 0) {
+                hideSuggestions();
+                return;
+            }
+            
+            suggestionContainer.innerHTML = suggestions.map(suggestion => `
+                <div class="px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0" 
+                     onclick="selectSuggestion('${suggestion}')">
+                    <span class="text-secondary-800">${suggestion}</span>
+                </div>
+            `).join('');
+            
+            suggestionContainer.classList.remove('hidden');
+        }
+
+        function hideSuggestions() {
+            const suggestionContainer = document.getElementById('searchSuggestions');
+            if (suggestionContainer) {
+                suggestionContainer.classList.add('hidden');
+            }
+        }
+
+        function selectSuggestion(suggestion) {
+            document.getElementById('drugSearchInput').value = suggestion;
+            hideSuggestions();
+            searchDrugsOnHomepage();
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setupSearchAutocomplete();
+            
+            // Allow Enter key to trigger search
+            document.getElementById('drugSearchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    hideSuggestions();
+                    searchDrugsOnHomepage();
+                }
+            });
+            
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('#drugSearchInput') && !e.target.closest('#searchSuggestions')) {
+                    hideSuggestions();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

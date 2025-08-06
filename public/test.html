@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geopharm Test Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-md mx-auto bg-white rounded-lg p-6">
+        <h1 class="text-2xl font-bold mb-4">Geopharm Test Page</h1>
+        
+        <div class="space-y-4">
+            <button onclick="testHomepage()" class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                Test Homepage
+            </button>
+            
+            <button onclick="testRegistration()" class="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+                Test Registration
+            </button>
+            
+            <button onclick="testClientDashboard()" class="w-full bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600">
+                Test Client Dashboard
+            </button>
+            
+            <button onclick="testPharmacistDashboard()" class="w-full bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-600">
+                Test Pharmacist Dashboard
+            </button>
+        </div>
+        
+        <div id="results" class="mt-6 p-4 bg-gray-50 rounded">
+            <p>Click buttons above to test each page...</p>
+        </div>
+    </div>
+
+    <script>
+        function updateResults(message) {
+            document.getElementById('results').innerHTML = `<p>${message}</p>`;
+        }
+
+        function testHomepage() {
+            updateResults('Testing homepage...');
+            window.location.href = 'home.html';
+        }
+
+        function testRegistration() {
+            updateResults('Testing registration...');
+            window.location.href = 'register.html';
+        }
+
+        function testClientDashboard() {
+            updateResults('Testing client dashboard...');
+            // Set test user data
+            localStorage.setItem('pendingUser', JSON.stringify({
+                firstName: 'Test',
+                lastName: 'User',
+                userType: 'client',
+                registeredAt: new Date().toISOString()
+            }));
+            localStorage.setItem('userType', 'client');
+            window.location.href = 'client-dashboard.html';
+        }
+
+        function testPharmacistDashboard() {
+            updateResults('Testing pharmacist dashboard...');
+            // Set test user data
+            localStorage.setItem('pendingUser', JSON.stringify({
+                firstName: 'Dr. Test',
+                lastName: 'Pharmacist',
+                pharmacyName: 'Test Pharmacy',
+                userType: 'pharmacist',
+                registeredAt: new Date().toISOString()
+            }));
+            localStorage.setItem('userType', 'pharmacist');
+            window.location.href = 'pharmacist-dashboard.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Dashboard - Geopharm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        accent: {
+                            50: '#fef7ff',
+                            100: '#fce7ff',
+                            200: '#f8d4fe',
+                            300: '#f0abfc',
+                            400: '#e879f9',
+                            500: '#d946ef',
+                            600: '#c026d3',
+                            700: '#a21caf',
+                            800: '#86198f',
+                            900: '#701a75',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(30px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .bg-pattern {
+            background-image: 
+                radial-gradient(circle at 25% 25%, #22c55e 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, #d946ef 0%, transparent 50%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 relative overflow-x-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 bg-pattern opacity-5"></div>
+    
+    <!-- Navigation -->
+    <nav class="relative z-20 py-4 bg-white/80 backdrop-blur-sm border-b border-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-hospital text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-secondary-800">Geopharm</h1>
+                        <p class="text-sm text-secondary-500">Client Dashboard</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-primary-600"></i>
+                        </div>
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-secondary-800" id="userName">Welcome back!</p>
+                            <p class="text-xs text-secondary-500">Client</p>
+                        </div>
+                    </div>
+                    <button onclick="logout()" class="text-secondary-600 hover:text-red-600 transition-colors">
+                        <i class="fas fa-sign-out-alt text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Pharmacy Details Modal -->
+    <div id="pharmacyModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-8">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-hospital text-primary-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h2 id="modalPharmacyName" class="text-3xl font-bold text-secondary-800">Pharmacy Name</h2>
+                            <p id="modalPharmacyAddress" class="text-secondary-600">Address</p>
+                        </div>
+                    </div>
+                    <button onclick="closePharmacyModal()" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
+                        <i class="fas fa-times text-gray-600"></i>
+                    </button>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Left Column: Pharmacy Info & Inventory -->
+                    <div class="space-y-6">
+                        <!-- Contact Information -->
+                        <div class="bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl p-6">
+                            <h3 class="text-xl font-bold text-secondary-800 mb-4">Contact Information</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-phone text-primary-600"></i>
+                                    <span id="modalPharmacyPhone" class="text-secondary-700">Phone</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-map-marker-alt text-primary-600"></i>
+                                    <span id="modalPharmacyDistance" class="text-secondary-700">Distance</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-clock text-primary-600"></i>
+                                    <span class="text-secondary-700">Open: 8:00 AM - 8:00 PM</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-3 mt-4">
+                                <button id="modalCallBtn" onclick="callPharmacy('')" class="flex-1 bg-primary-500 text-white py-3 px-4 rounded-xl hover:bg-primary-600 transition-colors">
+                                    <i class="fas fa-phone mr-2"></i>Call Now
+                                </button>
+                                <button onclick="startChat()" class="flex-1 bg-accent-500 text-white py-3 px-4 rounded-xl hover:bg-accent-600 transition-colors">
+                                    <i class="fas fa-comments mr-2"></i>Chat
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Pharmacy Inventory -->
+                        <div class="bg-white border border-gray-200 rounded-2xl p-6">
+                            <h3 class="text-xl font-bold text-secondary-800 mb-4">Available Medications</h3>
+                            <div class="space-y-3 max-h-64 overflow-y-auto" id="pharmacyInventory">
+                                <!-- Inventory items will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Map -->
+                    <div class="space-y-6">
+                        <div class="bg-gray-100 rounded-2xl p-4">
+                            <h3 class="text-xl font-bold text-secondary-800 mb-4">Location</h3>
+                            <div id="pharmacyMap" class="w-full h-80 rounded-xl bg-gray-200 flex items-center justify-center">
+                                <div class="text-center text-gray-500">
+                                    <i class="fas fa-map-marked-alt text-4xl mb-2"></i>
+                                    <p>Interactive map will load here</p>
+                                </div>
+                            </div>
+                            <button onclick="getDirections()" class="w-full mt-4 bg-gradient-to-r from-primary-500 to-accent-500 text-white py-3 px-4 rounded-xl hover:from-primary-600 hover:to-accent-600 transition-all">
+                                <i class="fas fa-directions mr-2"></i>Get Directions
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="relative z-10 py-8">
+        <div class="container mx-auto px-4">
+            <!-- Welcome Section -->
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-secondary-800 mb-2" id="welcomeMessage">Welcome to Your Dashboard</h2>
+                <p class="text-secondary-600">Search for medications and connect with pharmacies in Bamenda</p>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt text-primary-600 text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold text-secondary-800" id="nearbyPharmacies">6</span>
+                    </div>
+                    <h3 class="text-sm font-medium text-secondary-600">Nearby Pharmacies</h3>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-accent-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-pills text-accent-600 text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold text-secondary-800" id="availableMeds">1000+</span>
+                    </div>
+                    <h3 class="text-sm font-medium text-secondary-600">Available Medications</h3>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-comments text-primary-600 text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold text-secondary-800" id="activeChats">3</span>
+                    </div>
+                    <h3 class="text-sm font-medium text-secondary-600">Active Conversations</h3>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-accent-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-clock text-accent-600 text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold text-secondary-800">24/7</span>
+                    </div>
+                    <h3 class="text-sm font-medium text-secondary-600">Service Available</h3>
+                </div>
+            </div>
+
+            <!-- Main Dashboard Grid -->
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Left Column -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Quick Actions -->
+                    <div class="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
+                        <h3 class="text-2xl font-bold text-secondary-800 mb-6">Quick Actions</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <button onclick="findPharmacies()" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white p-6 rounded-2xl hover:from-primary-600 hover:to-primary-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-left">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                        <i class="fas fa-search-location text-white text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-lg">Find Pharmacies</h4>
+                                        <p class="text-primary-100 text-sm">Locate nearby pharmacies</p>
+                                    </div>
+                                </div>
+                            </button>
+                            
+                            <button onclick="searchMedications()" class="bg-gradient-to-r from-accent-500 to-accent-600 text-white p-6 rounded-2xl hover:from-accent-600 hover:to-accent-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-left">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                        <i class="fas fa-pills text-white text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-lg">Search Medications</h4>
+                                        <p class="text-accent-100 text-sm">Check drug availability</p>
+                                    </div>
+                                </div>
+                            </button>
+                            
+                            <button onclick="openChat()" class="bg-gradient-to-r from-primary-500 to-accent-500 text-white p-6 rounded-2xl hover:from-primary-600 hover:to-accent-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-left">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                        <i class="fas fa-comments text-white text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-lg">Chat with Pharmacists</h4>
+                                        <p class="text-primary-100 text-sm">Get professional advice</p>
+                                    </div>
+                                </div>
+                            </button>
+                            
+                            <button onclick="viewProfile()" class="bg-gradient-to-r from-secondary-600 to-secondary-700 text-white p-6 rounded-2xl hover:from-secondary-700 hover:to-secondary-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-left">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                        <i class="fas fa-user-cog text-white text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-lg">Manage Profile</h4>
+                                        <p class="text-secondary-100 text-sm">Update your information</p>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Drug Search Section -->
+                    <div class="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 mb-8">
+                        <h3 class="text-2xl font-bold text-secondary-800 mb-6">Search for Medications</h3>
+                        <div class="flex flex-col md:flex-row gap-4 mb-6">
+                            <div class="flex-1">
+                                <input type="text" id="drugSearch" placeholder="Search for medications (e.g., Paracetamol, Amoxicillin...)" class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                            </div>
+                            <button onclick="searchDrugs()" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-8 py-3 rounded-2xl hover:from-primary-600 hover:to-primary-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                                <i class="fas fa-search mr-2"></i>Search
+                            </button>
+                        </div>
+                        <div id="searchResults" class="hidden">
+                            <h4 class="text-lg font-semibold text-secondary-800 mb-4">Available Pharmacies</h4>
+                            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4" id="pharmacyResults">
+                                <!-- Search results will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-2xl font-bold text-secondary-800">Recent Activity</h3>
+                            <button class="text-primary-600 hover:text-primary-700 font-medium">View All</button>
+                        </div>
+                        <div class="space-y-4" id="recentActivity">
+                            <div class="flex items-center space-x-4 p-4 bg-primary-50 rounded-2xl">
+                                <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-search text-primary-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-secondary-800">Searched for "Paracetamol"</p>
+                                    <p class="text-sm text-secondary-500">2 hours ago</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-4 p-4 bg-accent-50 rounded-2xl">
+                                <div class="w-10 h-10 bg-accent-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-comments text-accent-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-secondary-800">Chatted with Central Pharmacy</p>
+                                    <p class="text-sm text-secondary-500">1 day ago</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-4 p-4 bg-primary-50 rounded-2xl">
+                                <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-map-marker-alt text-primary-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-secondary-800">Found 6 nearby pharmacies</p>
+                                    <p class="text-sm text-secondary-500">2 days ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="space-y-8">
+                    <!-- User Profile Summary -->
+                    <div class="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
+                        <h3 class="text-xl font-bold text-secondary-800 mb-6">Your Profile</h3>
+                        <div class="space-y-4" id="userProfileSummary">
+                            <div class="text-center py-8">
+                                <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-user text-primary-600 text-2xl"></i>
+                                </div>
+                                <p class="text-secondary-600 mb-4">Complete your profile to get personalized recommendations</p>
+                                <button onclick="viewProfile()" class="bg-primary-500 text-white px-6 py-2 rounded-xl hover:bg-primary-600 transition-colors">
+                                    <i class="fas fa-edit mr-2"></i>Update Profile
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Chat -->
+                    <div class="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
+                        <h3 class="text-xl font-bold text-secondary-800 mb-6">Quick Chat</h3>
+                        <div class="space-y-4">
+                            <div class="bg-gradient-to-r from-primary-500 to-accent-500 text-white p-4 rounded-2xl">
+                                <div class="flex items-center space-x-3 mb-3">
+                                    <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-robot text-white"></i>
+                                    </div>
+                                    <span class="font-medium">AI Assistant</span>
+                                </div>
+                                <p class="text-sm text-primary-100">Hi! I can help you find medications, locate pharmacies, or answer health-related questions. How can I assist you today?</p>
+                            </div>
+                            <button onclick="openChat()" class="w-full bg-primary-100 text-primary-700 py-3 rounded-2xl hover:bg-primary-200 transition-colors font-medium">
+                                Start Conversation
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load user data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            loadDashboardData();
+        });
+
+        function loadUserData() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (user.first_name) {
+                document.getElementById('userName').textContent = `Welcome back, ${user.first_name}!`;
+            }
+        }
+
+        function loadDashboardData() {
+            // This would typically fetch real data from your API
+            // For now, we'll use mock data
+            updateStats();
+        }
+
+        function updateStats() {
+            // Update dashboard statistics
+            document.getElementById('nearbyPharmacies').textContent = '6';
+            document.getElementById('availableMeds').textContent = '1000+';
+            document.getElementById('activeChats').textContent = '3';
+        }
+
+        function findPharmacies() {
+            window.location.href = '/index.html';
+        }
+
+        function searchMedications() {
+            document.getElementById('drugSearch').focus();
+        }
+
+        function searchDrugs() {
+            const searchTerm = document.getElementById('drugSearch').value.trim();
+            if (!searchTerm) {
+                alert('Please enter a medication name to search');
+                return;
+            }
+
+            // Sample pharmacy data with drug availability
+            const pharmacies = [
+                {
+                    name: "Central Pharmacy",
+                    distance: "0.5 km",
+                    price: "2,250 XAF",
+                    stock: "In Stock",
+                    address: "Commercial Avenue, Bamenda",
+                    phone: "+237 123 456 789",
+                    available: true
+                },
+                {
+                    name: "Health Plus Pharmacy",
+                    distance: "1.2 km",
+                    price: "2,400 XAF",
+                    stock: "Low Stock (3 left)",
+                    address: "Nkwen, Bamenda",
+                    phone: "+237 123 456 790",
+                    available: true
+                },
+                {
+                    name: "MediCare Pharmacy",
+                    distance: "2.1 km",
+                    price: "2,600 XAF",
+                    stock: "In Stock",
+                    address: "Mile 3, Bamenda",
+                    phone: "+237 123 456 791",
+                    available: true
+                },
+                {
+                    name: "City Pharmacy",
+                    distance: "2.8 km",
+                    price: "2,475 XAF",
+                    stock: "In Stock",
+                    address: "City Center, Bamenda",
+                    phone: "+237 123 456 792",
+                    available: true
+                },
+                {
+                    name: "Green Cross Pharmacy",
+                    distance: "3.2 km",
+                    price: "2,550 XAF",
+                    stock: "In Stock",
+                    address: "Ntarikon, Bamenda",
+                    phone: "+237 123 456 793",
+                    available: true
+                },
+                {
+                    name: "Life Care Pharmacy",
+                    distance: "3.5 km",
+                    price: "2,375 XAF",
+                    stock: "Out of Stock",
+                    address: "Mile 4, Bamenda",
+                    phone: "+237 123 456 794",
+                    available: false
+                }
+            ];
+
+            // Filter pharmacies that have the drug available
+            const availablePharmacies = pharmacies.filter(pharmacy => pharmacy.available);
+            
+            // Show results
+            const resultsContainer = document.getElementById('searchResults');
+            const pharmacyResults = document.getElementById('pharmacyResults');
+            
+            pharmacyResults.innerHTML = availablePharmacies.map(pharmacy => `
+                <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-hospital text-primary-600"></i>
+                        </div>
+                        <span class="text-xs px-3 py-1 rounded-full ${pharmacy.stock.includes('Out of Stock') ? 'bg-red-100 text-red-600' : pharmacy.stock.includes('Low Stock') ? 'bg-yellow-100 text-yellow-600' : 'bg-green-100 text-green-600'}">
+                            ${pharmacy.stock}
+                        </span>
+                    </div>
+                    <h4 class="font-bold text-secondary-800 mb-2">${pharmacy.name}</h4>
+                    <p class="text-sm text-secondary-600 mb-3">${pharmacy.address}</p>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-secondary-500">Distance:</span>
+                            <span class="font-medium text-secondary-800">${pharmacy.distance}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-secondary-500">Price:</span>
+                            <span class="font-bold text-primary-600">${pharmacy.price}</span>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="callPharmacy('${pharmacy.phone}')" class="flex-1 bg-primary-100 text-primary-700 py-2 px-3 rounded-xl hover:bg-primary-200 transition-colors text-sm">
+                            <i class="fas fa-phone mr-1"></i>Call
+                        </button>
+                        <button onclick="viewPharmacyDetails('${pharmacy.name}', '${pharmacy.address}', '${pharmacy.phone}', '${pharmacy.distance}')" class="flex-1 bg-accent-100 text-accent-700 py-2 px-3 rounded-xl hover:bg-accent-200 transition-colors text-sm">
+                            <i class="fas fa-info-circle mr-1"></i>View Details
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            resultsContainer.classList.remove('hidden');
+            
+            // Scroll to results
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function callPharmacy(phone) {
+            window.open(`tel:${phone}`);
+        }
+
+        function viewPharmacyDetails(name, address, phone, distance) {
+            // Populate modal with pharmacy information
+            document.getElementById('modalPharmacyName').textContent = name;
+            document.getElementById('modalPharmacyAddress').textContent = address;
+            document.getElementById('modalPharmacyPhone').textContent = phone;
+            document.getElementById('modalPharmacyDistance').textContent = distance;
+            
+            // Update call button
+            const callBtn = document.getElementById('modalCallBtn');
+            callBtn.setAttribute('onclick', `callPharmacy('${phone}')`);
+            
+            // Load pharmacy inventory
+            loadPharmacyInventory(name);
+            
+            // Initialize map
+            initializePharmacyMap(name, address);
+            
+            // Show modal
+            document.getElementById('pharmacyModal').classList.remove('hidden');
+        }
+
+        function closePharmacyModal() {
+            document.getElementById('pharmacyModal').classList.add('hidden');
+        }
+
+        function loadPharmacyInventory(pharmacyName) {
+            // Sample inventory data - in real app, this would come from API
+            const inventoryData = {
+                "Central Pharmacy": [
+                    { name: "Paracetamol 500mg", price: "2,500 XAF", stock: "In Stock", category: "Pain Relief" },
+                    { name: "Amoxicillin 250mg", price: "4,000 XAF", stock: "In Stock", category: "Antibiotic" },
+                    { name: "Vitamin C 1000mg", price: "1,500 XAF", stock: "Low Stock", category: "Supplement" },
+                    { name: "Ibuprofen 400mg", price: "2,250 XAF", stock: "In Stock", category: "Pain Relief" },
+                    { name: "Omeprazole 20mg", price: "3,000 XAF", stock: "In Stock", category: "Gastric" },
+                    { name: "Cetirizine 10mg", price: "1,750 XAF", stock: "In Stock", category: "Allergy" }
+                ],
+                "Health Plus Pharmacy": [
+                    { name: "Paracetamol 500mg", price: "2,400 XAF", stock: "In Stock", category: "Pain Relief" },
+                    { name: "Metformin 500mg", price: "3,500 XAF", stock: "In Stock", category: "Diabetes" },
+                    { name: "Aspirin 75mg", price: "1,250 XAF", stock: "In Stock", category: "Cardiovascular" },
+                    { name: "Loratadine 10mg", price: "2,000 XAF", stock: "Low Stock", category: "Allergy" },
+                    { name: "Simvastatin 20mg", price: "4,500 XAF", stock: "In Stock", category: "Cholesterol" }
+                ],
+                "MediCare Pharmacy": [
+                    { name: "Paracetamol 500mg", price: "2,600 XAF", stock: "Low Stock", category: "Pain Relief" },
+                    { name: "Ciprofloxacin 500mg", price: "6,000 XAF", stock: "In Stock", category: "Antibiotic" },
+                    { name: "Multivitamin", price: "4,000 XAF", stock: "In Stock", category: "Supplement" },
+                    { name: "Diclofenac 50mg", price: "1,900 XAF", stock: "In Stock", category: "Pain Relief" }
+                ]
+            };
+
+            const inventory = inventoryData[pharmacyName] || [
+                { name: "Paracetamol 500mg", price: "2,500 XAF", stock: "In Stock", category: "Pain Relief" },
+                { name: "Basic medications available", price: "Various", stock: "Contact for details", category: "General" }
+            ];
+
+            const inventoryContainer = document.getElementById('pharmacyInventory');
+            inventoryContainer.innerHTML = inventory.map(item => `
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-pills text-primary-600 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-secondary-800">${item.name}</p>
+                                <p class="text-sm text-secondary-500">${item.category}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-primary-600">${item.price}</p>
+                        <p class="text-xs px-2 py-1 rounded-full ${
+                            item.stock === 'In Stock' ? 'bg-green-100 text-green-600' : 
+                            item.stock.includes('Low Stock') ? 'bg-yellow-100 text-yellow-600' : 
+                            'bg-red-100 text-red-600'
+                        }">${item.stock}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function initializePharmacyMap(pharmacyName, address) {
+            // In a real implementation, this would initialize a proper map with Leaflet or Google Maps
+            const mapContainer = document.getElementById('pharmacyMap');
+            
+            // Sample coordinates for Bamenda pharmacies
+            const pharmacyCoordinates = {
+                "Central Pharmacy": { lat: 5.9597, lng: 10.1460 },
+                "Health Plus Pharmacy": { lat: 5.9580, lng: 10.1445 },
+                "MediCare Pharmacy": { lat: 5.9610, lng: 10.1475 },
+                "City Pharmacy": { lat: 5.9565, lng: 10.1430 },
+                "Green Cross Pharmacy": { lat: 5.9620, lng: 10.1490 },
+                "Life Care Pharmacy": { lat: 5.9550, lng: 10.1415 }
+            };
+
+            const coords = pharmacyCoordinates[pharmacyName] || { lat: 5.9597, lng: 10.1460 };
+            
+            mapContainer.innerHTML = `
+                <div class="w-full h-full bg-gradient-to-br from-primary-100 to-accent-100 rounded-xl flex flex-col items-center justify-center text-center p-6">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+                        <i class="fas fa-map-marker-alt text-primary-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-bold text-secondary-800 mb-2">${pharmacyName}</h4>
+                    <p class="text-secondary-600 text-sm mb-3">${address}</p>
+                    <div class="bg-white/80 rounded-lg p-3 text-xs">
+                        <p class="text-secondary-700">Coordinates: ${coords.lat}, ${coords.lng}</p>
+                        <p class="text-secondary-500 mt-1">Interactive map integration available</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getDirections() {
+            const pharmacyName = document.getElementById('modalPharmacyName').textContent;
+            const address = document.getElementById('modalPharmacyAddress').textContent;
+            
+            // In a real app, this would open maps with directions
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const userLat = position.coords.latitude;
+                        const userLng = position.coords.longitude;
+                        // Open Google Maps with directions
+                        const mapsUrl = `https://www.google.com/maps/dir/${userLat},${userLng}/${encodeURIComponent(address + ', Bamenda, Cameroon')}`;
+                        window.open(mapsUrl, '_blank');
+                    },
+                    (error) => {
+                        // Fallback: open maps with destination only
+                        const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(address + ', Bamenda, Cameroon')}`;
+                        window.open(mapsUrl, '_blank');
+                    }
+                );
+            } else {
+                // Fallback for browsers without geolocation
+                const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(address + ', Bamenda, Cameroon')}`;
+                window.open(mapsUrl, '_blank');
+            }
+        }
+
+        function startChat() {
+            const pharmacyName = document.getElementById('modalPharmacyName').textContent;
+            // Store the pharmacy name for the chat interface
+            localStorage.setItem('chatPharmacy', pharmacyName);
+            window.location.href = '/chat.html';
+        }
+
+        function openChat() {
+            window.location.href = '/chat.html';
+        }
+
+        function viewProfile() {
+            // Implement profile management
+            alert('Profile management feature coming soon!');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                localStorage.removeItem('userType');
+                sessionStorage.clear();
+                window.location.href = '/home.html';
+            }
+        }
+
+        // Check authentication and load user data
+        const userData = localStorage.getItem('pendingUser');
+        const userType = localStorage.getItem('userType');
+        
+        if (!userData || userType !== 'client') {
+            // Redirect to registration if no user data or wrong user type
+            window.location.href = '/register.html';
+            return;
+        }
+        
+        // Parse user data and display welcome message
+        const user = JSON.parse(userData);
+        
+        // Update the dashboard with user information
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update welcome message with user name
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const userName = document.getElementById('userName');
+            
+            if (welcomeMessage && user.firstName) {
+                welcomeMessage.textContent = `Welcome, ${user.firstName}!`;
+            }
+            
+            if (userName && user.firstName) {
+                userName.textContent = `${user.firstName} ${user.lastName || ''}`;
+            }
+            
+            // Update navigation with user name
+            const navTitle = document.querySelector('nav h1');
+            if (navTitle && user.firstName) {
+                navTitle.textContent = `${user.firstName}'s Dashboard`;
+            }
+            
+            // Show success message for new registration
+            if (user.registeredAt) {
+                const registrationDate = new Date(user.registeredAt);
+                const now = new Date();
+                const timeDiff = now - registrationDate;
+                
+                // If registered within the last 5 minutes, show welcome message
+                if (timeDiff < 5 * 60 * 1000) {
+                    showWelcomeMessage(user);
+                }
+            }
+        });
+        
+        function showWelcomeMessage(user) {
+            const welcomeDiv = document.createElement('div');
+            welcomeDiv.className = 'fixed top-4 right-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white p-6 rounded-2xl shadow-2xl z-50 max-w-md';
+            welcomeDiv.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-user text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-1">Welcome to Geopharm!</h3>
+                        <p class="text-primary-100 text-sm mb-2">Hello ${user.firstName} ${user.lastName}</p>
+                        <p class="text-primary-100 text-xs">Your account is now active. Start searching for medications!</p>
+                        ${user.bloodGroup ? `<p class="text-primary-100 text-xs mt-1">Blood Group: ${user.bloodGroup}</p>` : ''}
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-white/70 hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(welcomeDiv);
+            
+            // Auto remove after 8 seconds
+            setTimeout(() => {
+                if (document.body.contains(welcomeDiv)) {
+                    welcomeDiv.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (document.body.contains(welcomeDiv)) {
+                            document.body.removeChild(welcomeDiv);
+                        }
+                    }, 300);
+                }
+            }, 8000);
+        }
+
+        // Initialize dashboard
+        loadUserData();
+    </script>
+</body>
+</html>

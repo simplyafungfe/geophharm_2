@@ -1,0 +1,428 @@
+{
+  "pharmacies": [
+    {
+      "id": "ph001",
+      "name": "Central Pharmacy Bamenda",
+      "address": "Commercial Avenue, Bamenda",
+      "phone": "+237 233 362 145",
+      "email": "central@pharmacy-bamenda.cm",
+      "coordinates": {
+        "latitude": 5.9597,
+        "longitude": 10.1460
+      },
+      "operatingHours": {
+        "monday": "08:00-20:00",
+        "tuesday": "08:00-20:00",
+        "wednesday": "08:00-20:00",
+        "thursday": "08:00-20:00",
+        "friday": "08:00-20:00",
+        "saturday": "08:00-18:00",
+        "sunday": "10:00-16:00"
+      },
+      "services": ["Prescription Filling", "Health Consultation", "Blood Pressure Check", "Vaccination"],
+      "inventory": [
+        {
+          "drugId": "drug001",
+          "name": "Paracetamol 500mg",
+          "category": "Pain Relief",
+          "price": 2500,
+          "currency": "XAF",
+          "stock": 150,
+          "expiryDate": "2025-12-31",
+          "manufacturer": "GSK",
+          "description": "Pain and fever relief"
+        },
+        {
+          "drugId": "drug002",
+          "name": "Amoxicillin 250mg",
+          "category": "Antibiotic",
+          "price": 4000,
+          "currency": "XAF",
+          "stock": 75,
+          "expiryDate": "2025-08-15",
+          "manufacturer": "Pfizer",
+          "description": "Broad-spectrum antibiotic"
+        },
+        {
+          "drugId": "drug003",
+          "name": "Vitamin C 1000mg",
+          "category": "Supplement",
+          "price": 1500,
+          "currency": "XAF",
+          "stock": 200,
+          "expiryDate": "2026-03-20",
+          "manufacturer": "Nature's Way",
+          "description": "Immune system support"
+        },
+        {
+          "drugId": "drug004",
+          "name": "Ibuprofen 400mg",
+          "category": "Pain Relief",
+          "price": 2250,
+          "currency": "XAF",
+          "stock": 120,
+          "expiryDate": "2025-10-12",
+          "manufacturer": "Advil",
+          "description": "Anti-inflammatory pain relief"
+        },
+        {
+          "drugId": "drug005",
+          "name": "Omeprazole 20mg",
+          "category": "Gastric",
+          "price": 3000,
+          "currency": "XAF",
+          "stock": 90,
+          "expiryDate": "2025-11-30",
+          "manufacturer": "AstraZeneca",
+          "description": "Acid reflux treatment"
+        }
+      ]
+    },
+    {
+      "id": "ph002",
+      "name": "Health Plus Pharmacy",
+      "address": "Nkwen Quarter, Bamenda",
+      "phone": "+237 233 362 246",
+      "email": "info@healthplus-bamenda.cm",
+      "coordinates": {
+        "latitude": 5.9580,
+        "longitude": 10.1445
+      },
+      "operatingHours": {
+        "monday": "07:30-21:00",
+        "tuesday": "07:30-21:00",
+        "wednesday": "07:30-21:00",
+        "thursday": "07:30-21:00",
+        "friday": "07:30-21:00",
+        "saturday": "08:00-19:00",
+        "sunday": "09:00-17:00"
+      },
+      "services": ["24/7 Emergency", "Home Delivery", "Health Screening", "Diabetes Care"],
+      "inventory": [
+        {
+          "drugId": "drug001",
+          "name": "Paracetamol 500mg",
+          "category": "Pain Relief",
+          "price": 2400,
+          "currency": "XAF",
+          "stock": 180,
+          "expiryDate": "2025-12-31",
+          "manufacturer": "GSK",
+          "description": "Pain and fever relief"
+        },
+        {
+          "drugId": "drug006",
+          "name": "Metformin 500mg",
+          "category": "Diabetes",
+          "price": 3500,
+          "currency": "XAF",
+          "stock": 65,
+          "expiryDate": "2025-09-22",
+          "manufacturer": "Merck",
+          "description": "Type 2 diabetes management"
+        },
+        {
+          "drugId": "drug007",
+          "name": "Aspirin 75mg",
+          "category": "Cardiovascular",
+          "price": 1250,
+          "currency": "XAF",
+          "stock": 300,
+          "expiryDate": "2026-01-15",
+          "manufacturer": "Bayer",
+          "description": "Heart protection and blood thinner"
+        },
+        {
+          "drugId": "drug008",
+          "name": "Loratadine 10mg",
+          "category": "Allergy",
+          "price": 2000,
+          "currency": "XAF",
+          "stock": 45,
+          "expiryDate": "2025-07-30",
+          "manufacturer": "Claritin",
+          "description": "Antihistamine for allergies"
+        },
+        {
+          "drugId": "drug009",
+          "name": "Simvastatin 20mg",
+          "category": "Cholesterol",
+          "price": 4500,
+          "currency": "XAF",
+          "stock": 80,
+          "expiryDate": "2025-12-05",
+          "manufacturer": "Zocor",
+          "description": "Cholesterol management"
+        }
+      ]
+    },
+    {
+      "id": "ph003",
+      "name": "MediCare Pharmacy",
+      "address": "Mile 3 Junction, Bamenda",
+      "phone": "+237 233 362 347",
+      "email": "contact@medicare-bamenda.cm",
+      "coordinates": {
+        "latitude": 5.9610,
+        "longitude": 10.1475
+      },
+      "operatingHours": {
+        "monday": "08:00-19:00",
+        "tuesday": "08:00-19:00",
+        "wednesday": "08:00-19:00",
+        "thursday": "08:00-19:00",
+        "friday": "08:00-19:00",
+        "saturday": "08:00-17:00",
+        "sunday": "10:00-15:00"
+      },
+      "services": ["Insurance Claims", "Prescription Delivery", "Health Products", "Medical Equipment"],
+      "inventory": [
+        {
+          "drugId": "drug001",
+          "name": "Paracetamol 500mg",
+          "category": "Pain Relief",
+          "price": 2600,
+          "currency": "XAF",
+          "stock": 15,
+          "expiryDate": "2025-12-31",
+          "manufacturer": "GSK",
+          "description": "Pain and fever relief"
+        },
+        {
+          "drugId": "drug010",
+          "name": "Ciprofloxacin 500mg",
+          "category": "Antibiotic",
+          "price": 6000,
+          "currency": "XAF",
+          "stock": 55,
+          "expiryDate": "2025-08-28",
+          "manufacturer": "Cipro",
+          "description": "Broad-spectrum antibiotic"
+        },
+        {
+          "drugId": "drug011",
+          "name": "Multivitamin Complex",
+          "category": "Supplement",
+          "price": 4000,
+          "currency": "XAF",
+          "stock": 100,
+          "expiryDate": "2026-05-10",
+          "manufacturer": "Centrum",
+          "description": "Complete vitamin and mineral supplement"
+        },
+        {
+          "drugId": "drug012",
+          "name": "Diclofenac 50mg",
+          "category": "Pain Relief",
+          "price": 1900,
+          "currency": "XAF",
+          "stock": 85,
+          "expiryDate": "2025-09-18",
+          "manufacturer": "Voltaren",
+          "description": "Anti-inflammatory pain relief"
+        }
+      ]
+    },
+    {
+      "id": "ph004",
+      "name": "City Pharmacy Bamenda",
+      "address": "City Center, Near Main Market, Bamenda",
+      "phone": "+237 233 362 448",
+      "email": "city@pharmacy-bamenda.cm",
+      "coordinates": {
+        "latitude": 5.9565,
+        "longitude": 10.1430
+      },
+      "operatingHours": {
+        "monday": "07:00-20:00",
+        "tuesday": "07:00-20:00",
+        "wednesday": "07:00-20:00",
+        "thursday": "07:00-20:00",
+        "friday": "07:00-20:00",
+        "saturday": "07:00-18:00",
+        "sunday": "09:00-16:00"
+      },
+      "services": ["Walk-in Clinic", "Immunizations", "Health Counseling", "Medical Supplies"],
+      "inventory": [
+        {
+          "drugId": "drug001",
+          "name": "Paracetamol 500mg",
+          "category": "Pain Relief",
+          "price": 2475,
+          "currency": "XAF",
+          "stock": 220,
+          "expiryDate": "2025-12-31",
+          "manufacturer": "GSK",
+          "description": "Pain and fever relief"
+        },
+        {
+          "drugId": "drug013",
+          "name": "Azithromycin 250mg",
+          "category": "Antibiotic",
+          "price": 4750,
+          "currency": "XAF",
+          "stock": 70,
+          "expiryDate": "2025-10-14",
+          "manufacturer": "Zithromax",
+          "description": "Macrolide antibiotic"
+        },
+        {
+          "drugId": "drug014",
+          "name": "Calcium + Vitamin D",
+          "category": "Supplement",
+          "price": 3250,
+          "currency": "XAF",
+          "stock": 130,
+          "expiryDate": "2026-02-28",
+          "manufacturer": "Caltrate",
+          "description": "Bone health supplement"
+        },
+        {
+          "drugId": "drug015",
+          "name": "Hydrocortisone Cream 1%",
+          "category": "Topical",
+          "price": 2100,
+          "currency": "XAF",
+          "stock": 25,
+          "expiryDate": "2025-06-30",
+          "manufacturer": "Cortaid",
+          "description": "Anti-inflammatory skin cream"
+        }
+      ]
+    },
+    {
+      "id": "ph005",
+      "name": "Green Cross Pharmacy",
+      "address": "Ntarikon Quarter, Bamenda",
+      "phone": "+237 233 362 549",
+      "email": "greencross@pharmacy-bamenda.cm",
+      "coordinates": {
+        "latitude": 5.9620,
+        "longitude": 10.1490
+      },
+      "operatingHours": {
+        "monday": "08:30-19:30",
+        "tuesday": "08:30-19:30",
+        "wednesday": "08:30-19:30",
+        "thursday": "08:30-19:30",
+        "friday": "08:30-19:30",
+        "saturday": "08:30-17:30",
+        "sunday": "10:30-15:30"
+      },
+      "services": ["Herbal Medicine", "Nutrition Counseling", "First Aid Training", "Health Monitoring"],
+      "inventory": [
+        {
+          "drugId": "drug001",
+          "name": "Paracetamol 500mg",
+          "category": "Pain Relief",
+          "price": 2550,
+          "currency": "XAF",
+          "stock": 95,
+          "expiryDate": "2025-12-31",
+          "manufacturer": "GSK",
+          "description": "Pain and fever relief"
+        },
+        {
+          "drugId": "drug016",
+          "name": "Doxycycline 100mg",
+          "category": "Antibiotic",
+          "price": 4250,
+          "currency": "XAF",
+          "stock": 60,
+          "expiryDate": "2025-11-20",
+          "manufacturer": "Vibramycin",
+          "description": "Tetracycline antibiotic"
+        },
+        {
+          "drugId": "drug017",
+          "name": "Iron Tablets 65mg",
+          "category": "Supplement",
+          "price": 2250,
+          "currency": "XAF",
+          "stock": 140,
+          "expiryDate": "2026-04-15",
+          "manufacturer": "Feosol",
+          "description": "Iron deficiency supplement"
+        },
+        {
+          "drugId": "drug018",
+          "name": "Antacid Tablets",
+          "category": "Gastric",
+          "price": 1400,
+          "currency": "XAF",
+          "stock": 180,
+          "expiryDate": "2025-08-25",
+          "manufacturer": "Tums",
+          "description": "Stomach acid relief"
+        }
+      ]
+    },
+    {
+      "id": "ph006",
+      "name": "Life Care Pharmacy",
+      "address": "Mile 4 Nkwen, Bamenda",
+      "phone": "+237 233 362 650",
+      "email": "lifecare@pharmacy-bamenda.cm",
+      "coordinates": {
+        "latitude": 5.9550,
+        "longitude": 10.1415
+      },
+      "operatingHours": {
+        "monday": "09:00-18:00",
+        "tuesday": "09:00-18:00",
+        "wednesday": "09:00-18:00",
+        "thursday": "09:00-18:00",
+        "friday": "09:00-18:00",
+        "saturday": "09:00-16:00",
+        "sunday": "11:00-14:00"
+      },
+      "services": ["Elderly Care", "Chronic Disease Management", "Medication Review", "Health Education"],
+      "inventory": [
+        {
+          "drugId": "drug019",
+          "name": "Atorvastatin 20mg",
+          "category": "Cholesterol",
+          "price": 5200,
+          "currency": "XAF",
+          "stock": 45,
+          "expiryDate": "2025-12-10",
+          "manufacturer": "Lipitor",
+          "description": "Cholesterol-lowering medication"
+        },
+        {
+          "drugId": "drug020",
+          "name": "Lisinopril 10mg",
+          "category": "Cardiovascular",
+          "price": 3800,
+          "currency": "XAF",
+          "stock": 70,
+          "expiryDate": "2025-09-05",
+          "manufacturer": "Prinivil",
+          "description": "ACE inhibitor for blood pressure"
+        },
+        {
+          "drugId": "drug021",
+          "name": "Cetirizine 10mg",
+          "category": "Allergy",
+          "price": 1750,
+          "currency": "XAF",
+          "stock": 110,
+          "expiryDate": "2025-11-12",
+          "manufacturer": "Zyrtec",
+          "description": "Antihistamine for allergies"
+        },
+        {
+          "drugId": "drug022",
+          "name": "Prednisone 5mg",
+          "category": "Anti-inflammatory",
+          "price": 2800,
+          "currency": "XAF",
+          "stock": 35,
+          "expiryDate": "2025-07-18",
+          "manufacturer": "Deltasone",
+          "description": "Corticosteroid anti-inflammatory"
+        }
+      ]
+    }
+  ]
+}

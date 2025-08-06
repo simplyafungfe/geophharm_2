@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Drugs - Geopharm Bamenda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a'
+                        },
+                        accent: {
+                            50: '#fefce8',
+                            100: '#fef9c3',
+                            200: '#fef08a',
+                            300: '#fde047',
+                            400: '#facc15',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                            700: '#a16207',
+                            800: '#854d0e',
+                            900: '#713f12'
+                        },
+                        medical: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d'
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'bounce-gentle': 'bounceGentle 2s infinite',
+                        'pulse-slow': 'pulse 3s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(40px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        bounceGentle: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+                        'medium': '0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 20px -5px rgba(0, 0, 0, 0.04)',
+                        'strong': '0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #22c55e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .medical-pattern {
+            background-image: 
+                radial-gradient(circle at 25px 25px, rgba(59, 130, 246, 0.05) 2px, transparent 2px),
+                radial-gradient(circle at 75px 75px, rgba(34, 197, 94, 0.05) 2px, transparent 2px);
+            background-size: 100px 100px;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-medical-50 medical-pattern">
+    <!-- Navigation -->
+    <nav class="glass-effect sticky top-0 z-50 animate-fade-in">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4 animate-slide-up">
+                    <div class="w-14 h-14 bg-gradient-to-br from-primary-500 via-primary-600 to-medical-500 rounded-2xl flex items-center justify-center shadow-medium animate-bounce-gentle">
+                        <i class="fas fa-pills text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold gradient-text">Geopharm</h1>
+                        <p class="text-sm text-gray-600 font-medium">Drug Search & Discovery</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <button onclick="getCurrentLocation()" class="group flex items-center text-medical-600 hover:text-medical-700 font-semibold transition-all duration-300">
+                        <i class="fas fa-location-arrow mr-2 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-sm">Use My Location</span>
+                    </button>
+                    <a href="index.html" class="text-primary-600 hover:text-primary-700 font-semibold transition-colors">
+                        <i class="fas fa-home mr-1"></i>
+                        Home
+                    </a>
+                    <a href="login.html" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-primary-600 hover:to-primary-700 transition-all duration-300 transform hover:scale-105 shadow-medium">
+                        Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Search -->
+    <div class="relative overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-medical-50 opacity-50"></div>
+        <div class="absolute top-20 left-10 w-64 h-64 bg-primary-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse-slow"></div>
+        <div class="absolute top-40 right-10 w-64 h-64 bg-medical-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse-slow" style="animation-delay: 1s;"></div>
+        
+        <div class="relative container mx-auto px-6 py-16">
+            <div class="text-center mb-16 animate-fade-in">
+                <div class="mb-6">
+                    <span class="inline-block bg-gradient-to-r from-primary-500 to-medical-500 text-white px-6 py-2 rounded-full text-sm font-semibold mb-4 animate-slide-up">
+                        🔍 Advanced Drug Search
+                    </span>
+                </div>
+                
+                <h2 class="text-5xl md:text-6xl font-bold mb-6 animate-slide-up" style="animation-delay: 0.2s;">
+                    <span class="gradient-text">Find Drugs</span><br>
+                    <span class="text-gray-800">Near You</span>
+                </h2>
+                
+                <p class="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed animate-slide-up" style="animation-delay: 0.4s;">
+                    Search for medications and find the nearest verified pharmacies in Bamenda with 
+                    <span class="text-primary-600 font-semibold">real-time availability</span> and 
+                    <span class="text-medical-600 font-semibold">accurate pricing</span>.
+                </p>
+                
+                <!-- Enhanced Search Form -->
+                <div class="max-w-5xl mx-auto animate-slide-up" style="animation-delay: 0.6s;">
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-500 to-medical-500 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+                        <div class="relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-strong border border-white/20">
+                            <form id="searchForm" class="space-y-8">
+                                <div class="grid md:grid-cols-2 gap-8">
+                                    <!-- Drug Name Search -->
+                                    <div class="space-y-3">
+                                        <label class="block text-left font-bold text-gray-800 text-lg">
+                                            <i class="fas fa-pills text-primary-500 mr-3"></i>
+                                            Drug Name
+                                        </label>
+                                        <div class="relative">
+                                            <input 
+                                                type="text" 
+                                                id="drugName" 
+                                                placeholder="e.g., Paracetamol, Amoxicillin, Aspirin..."
+                                                class="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-primary-200 focus:border-primary-500 transition-all duration-300 bg-white/80"
+                                                required
+                                            >
+                                            <div class="absolute inset-y-0 right-0 flex items-center pr-6">
+                                                <i class="fas fa-search text-gray-400"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Location -->
+                                    <div class="space-y-3">
+                                        <label class="block text-left font-bold text-gray-800 text-lg">
+                                            <i class="fas fa-map-marker-alt text-medical-500 mr-3"></i>
+                                            Your Location
+                                        </label>
+                                        <div class="relative">
+                                            <input 
+                                                type="text" 
+                                                id="location" 
+                                                placeholder="Enter area or use GPS location"
+                                                class="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-medical-200 focus:border-medical-500 transition-all duration-300 bg-white/80 pr-16"
+                                            >
+                                            <button 
+                                                type="button" 
+                                                onclick="getCurrentLocation()"
+                                                class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-medical-500 text-white p-2 rounded-xl hover:bg-medical-600 transition-colors"
+                                                title="Use GPS Location"
+                                            >
+                                                <i class="fas fa-crosshairs"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Search Radius -->
+                                <div class="space-y-4">
+                                    <label class="block text-left font-bold text-gray-800 text-lg">
+                                        <i class="fas fa-circle-notch text-accent-500 mr-3"></i>
+                                        Search Radius: <span id="radiusValue" class="text-primary-600">5</span> km
+                                    </label>
+                                    <div class="relative">
+                                        <input 
+                                            type="range" 
+                                            id="searchRadius" 
+                                            min="1" 
+                                            max="20" 
+                                            value="5"
+                                            class="w-full h-3 bg-gradient-to-r from-primary-200 to-medical-200 rounded-lg appearance-none cursor-pointer slider"
+                                            oninput="document.getElementById('radiusValue').textContent = this.value"
+                                        >
+                                        <div class="flex justify-between text-sm text-gray-500 mt-2">
+                                            <span>1 km</span>
+                                            <span>10 km</span>
+                                            <span>20 km</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Search Button -->
+                                <button 
+                                    type="submit" 
+                                    class="w-full bg-gradient-to-r from-primary-500 via-primary-600 to-medical-500 text-white py-6 px-8 rounded-2xl font-bold text-xl hover:from-primary-600 hover:via-primary-700 hover:to-medical-600 transition-all duration-300 transform hover:scale-105 shadow-strong group"
+                                >
+                                    <i class="fas fa-search mr-3 group-hover:rotate-12 transition-transform"></i>
+                                    Search Pharmacies
+                                    <i class="fas fa-arrow-right ml-3 group-hover:translate-x-1 transition-transform"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden text-center py-12">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+            <p class="mt-4 text-gray-600">Searching for pharmacies...</p>
+        </div>
+
+        <!-- Search Results -->
+        <div id="searchResults" class="hidden">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-2xl font-bold text-gray-800">Search Results</h3>
+                <div class="text-sm text-gray-600">
+                    <span id="resultCount">0</span> pharmacies found
+                </div>
+            </div>
+            
+            <div id="pharmacyList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+
+        <!-- No Results -->
+        <div id="noResults" class="hidden text-center py-12">
+            <div class="text-6xl text-gray-300 mb-4">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">No Pharmacies Found</h3>
+            <p class="text-gray-600 mb-6">Try expanding your search radius or searching for a different drug.</p>
+            <button onclick="resetSearch()" class="bg-primary-500 text-white px-6 py-3 rounded-lg hover:bg-primary-600">
+                Try New Search
+            </button>
+        </div>
+    </div>
+
+    <!-- Pharmacy Detail Modal -->
+    <div id="pharmacyModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 id="modalPharmacyName" class="text-2xl font-bold text-gray-800"></h3>
+                    <button onclick="closePharmacyModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div id="modalContent">
+                    <!-- Modal content will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div id="reportModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full">
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Report Pharmacy</h3>
+                <form id="reportForm">
+                    <input type="hidden" id="reportPharmacyId">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-2">Reason for Report</label>
+                            <select id="reportReason" class="w-full px-3 py-2 border border-gray-300 rounded-lg" required>
+                                <option value="">Select a reason</option>
+                                <option value="closed">Pharmacy is closed</option>
+                                <option value="fake_drugs">Selling fake drugs</option>
+                                <option value="overpricing">Overpricing</option>
+                                <option value="poor_service">Poor service</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-2">Additional Details</label>
+                            <textarea id="reportDetails" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="Please provide more details..."></textarea>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button type="button" onclick="closeReportModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                Cancel
+                            </button>
+                            <button type="submit" class="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                                Submit Report
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let userLocation = null;
+        let currentSearchResults = [];
+
+        // Get user's current location
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        document.getElementById('location').value = `Current Location (${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)})`;
+                    },
+                    function(error) {
+                        alert('Unable to get your location. Please enter it manually.');
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        }
+
+        // Handle search form submission
+        document.getElementById('searchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const drugName = document.getElementById('drugName').value.trim();
+            const location = document.getElementById('location').value.trim();
+            const radius = document.getElementById('searchRadius').value;
+
+            if (!drugName) {
+                alert('Please enter a drug name');
+                return;
+            }
+
+            // Show loading state
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('searchResults').classList.add('hidden');
+            document.getElementById('noResults').classList.add('hidden');
+
+            try {
+                // Prepare search parameters
+                const searchParams = {
+                    drug: drugName,
+                    radius: radius
+                };
+
+                // Add location parameters
+                if (userLocation) {
+                    searchParams.lat = userLocation.lat;
+                    searchParams.lng = userLocation.lng;
+                } else if (location) {
+                    searchParams.location = location;
+                }
+
+                // Make API call
+                const response = await fetch('/api/search/drugs?' + new URLSearchParams(searchParams));
+                const data = await response.json();
+
+                // Hide loading state
+                document.getElementById('loadingState').classList.add('hidden');
+
+                if (data.success && data.pharmacies && data.pharmacies.length > 0) {
+                    displaySearchResults(data.pharmacies);
+                } else {
+                    document.getElementById('noResults').classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                document.getElementById('loadingState').classList.add('hidden');
+                alert('An error occurred while searching. Please try again.');
+            }
+        });
+
+        // Display search results
+        function displaySearchResults(pharmacies) {
+            currentSearchResults = pharmacies;
+            const pharmacyList = document.getElementById('pharmacyList');
+            const resultCount = document.getElementById('resultCount');
+            
+            resultCount.textContent = pharmacies.length;
+            
+            pharmacyList.innerHTML = pharmacies.map(pharmacy => `
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h4 class="text-lg font-bold text-gray-800">${pharmacy.name}</h4>
+                            <div class="flex items-center mt-1">
+                                <div class="flex text-yellow-400">
+                                    ${generateStarRating(pharmacy.rating || 0)}
+                                </div>
+                                <span class="ml-2 text-sm text-gray-600">(${pharmacy.rating || 0})</span>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold ${
+                            pharmacy.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                        }">
+                            ${pharmacy.status === 'approved' ? 'Verified' : 'Pending'}
+                        </span>
+                    </div>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-map-marker-alt w-4"></i>
+                            <span class="ml-2">${pharmacy.address}</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-phone w-4"></i>
+                            <span class="ml-2">${pharmacy.phone}</span>
+                        </div>
+                        ${pharmacy.distance ? `
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-route w-4"></i>
+                            <span class="ml-2">${pharmacy.distance.toFixed(1)} km away</span>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    ${pharmacy.drugs && pharmacy.drugs.length > 0 ? `
+                    <div class="mb-4">
+                        <h5 class="font-semibold text-gray-700 mb-2">Available Drugs:</h5>
+                        <div class="space-y-1">
+                            ${pharmacy.drugs.slice(0, 3).map(drug => `
+                                <div class="flex justify-between items-center text-sm">
+                                    <span>${drug.name}</span>
+                                    <span class="font-semibold text-primary-600">${drug.price} XAF</span>
+                                </div>
+                            `).join('')}
+                            ${pharmacy.drugs.length > 3 ? `
+                                <div class="text-xs text-gray-500">+${pharmacy.drugs.length - 3} more drugs</div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <div class="flex space-x-2">
+                        <button 
+                            onclick="viewPharmacyDetails(${pharmacy.id})" 
+                            class="flex-1 bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600 transition-colors"
+                        >
+                            <i class="fas fa-eye mr-1"></i>
+                            View Details
+                        </button>
+                        <button 
+                            onclick="openReportModal(${pharmacy.id})" 
+                            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                            title="Report this pharmacy"
+                        >
+                            <i class="fas fa-flag"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('searchResults').classList.remove('hidden');
+        }
+
+        // Generate star rating HTML
+        function generateStarRating(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 !== 0;
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            
+            let stars = '';
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+            return stars;
+        }
+
+        // View pharmacy details
+        async function viewPharmacyDetails(pharmacyId) {
+            try {
+                const response = await fetch(`/api/pharmacies/${pharmacyId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const pharmacy = data.pharmacy;
+                    document.getElementById('modalPharmacyName').textContent = pharmacy.name;
+                    
+                    document.getElementById('modalContent').innerHTML = `
+                        <div class="space-y-6">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <h4 class="font-semibold text-gray-700 mb-2">Contact Information</h4>
+                                    <div class="space-y-2 text-sm">
+                                        <div><strong>Phone:</strong> ${pharmacy.phone}</div>
+                                        <div><strong>Email:</strong> ${pharmacy.email}</div>
+                                        <div><strong>Address:</strong> ${pharmacy.address}</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-700 mb-2">Rating & Status</h4>
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex items-center">
+                                            <span class="mr-2">Rating:</span>
+                                            <div class="flex text-yellow-400 mr-2">
+                                                ${generateStarRating(pharmacy.rating || 0)}
+                                            </div>
+                                            <span>(${pharmacy.rating || 0})</span>
+                                        </div>
+                                        <div><strong>Status:</strong> 
+                                            <span class="px-2 py-1 rounded text-xs ${
+                                                pharmacy.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                                            }">
+                                                ${pharmacy.status === 'approved' ? 'Verified' : 'Pending'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            ${pharmacy.drugs && pharmacy.drugs.length > 0 ? `
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-3">Available Drugs</h4>
+                                <div class="max-h-64 overflow-y-auto">
+                                    <table class="w-full text-sm">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="px-3 py-2 text-left">Drug Name</th>
+                                                <th class="px-3 py-2 text-left">Price (XAF)</th>
+                                                <th class="px-3 py-2 text-left">Stock</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${pharmacy.drugs.map(drug => `
+                                                <tr class="border-b">
+                                                    <td class="px-3 py-2">${drug.name}</td>
+                                                    <td class="px-3 py-2 font-semibold">${drug.price}</td>
+                                                    <td class="px-3 py-2">
+                                                        <span class="px-2 py-1 rounded text-xs ${
+                                                            drug.stock > 20 ? 'bg-green-100 text-green-800' : 
+                                                            drug.stock > 0 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
+                                                        }">
+                                                            ${drug.stock > 0 ? `${drug.stock} available` : 'Out of stock'}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            ` : '<p class="text-gray-600">No drug information available.</p>'}
+                            
+                            <div class="flex space-x-3">
+                                <button onclick="ratePharmacy(${pharmacy.id})" class="flex-1 bg-accent-500 text-white py-2 px-4 rounded-lg hover:bg-accent-600">
+                                    <i class="fas fa-star mr-1"></i>
+                                    Rate Pharmacy
+                                </button>
+                                <button onclick="openReportModal(${pharmacy.id})" class="px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50">
+                                    <i class="fas fa-flag mr-1"></i>
+                                    Report
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('pharmacyModal').classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error loading pharmacy details:', error);
+                alert('Error loading pharmacy details');
+            }
+        }
+
+        // Close pharmacy modal
+        function closePharmacyModal() {
+            document.getElementById('pharmacyModal').classList.add('hidden');
+        }
+
+        // Open report modal
+        function openReportModal(pharmacyId) {
+            document.getElementById('reportPharmacyId').value = pharmacyId;
+            document.getElementById('reportModal').classList.remove('hidden');
+            closePharmacyModal();
+        }
+
+        // Close report modal
+        function closeReportModal() {
+            document.getElementById('reportModal').classList.add('hidden');
+            document.getElementById('reportForm').reset();
+        }
+
+        // Handle report form submission
+        document.getElementById('reportForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const pharmacyId = document.getElementById('reportPharmacyId').value;
+            const reason = document.getElementById('reportReason').value;
+            const details = document.getElementById('reportDetails').value;
+
+            try {
+                const response = await fetch('/api/reports', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        pharmacy_id: pharmacyId,
+                        reason: reason,
+                        details: details
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Report submitted successfully. Thank you for helping improve our service.');
+                    closeReportModal();
+                } else {
+                    alert('Error submitting report: ' + (data.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error submitting report:', error);
+                alert('Error submitting report. Please try again.');
+            }
+        });
+
+        // Rate pharmacy function
+        async function ratePharmacy(pharmacyId) {
+            const rating = prompt('Rate this pharmacy (1-5 stars):');
+            if (rating && rating >= 1 && rating <= 5) {
+                const comment = prompt('Optional: Add a comment about your experience:');
+                const email = prompt('Optional: Enter your email for follow-up:');
+                
+                try {
+                    const response = await fetch('/api/ratings', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            pharmacy_id: pharmacyId,
+                            rating: parseInt(rating),
+                            comment: comment || null,
+                            user_email: email || null
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        alert('Thank you for your rating! Your feedback helps improve our service.');
+                        // Refresh the pharmacy details to show updated rating
+                        viewPharmacyDetails(pharmacyId);
+                    } else {
+                        alert('Error submitting rating: ' + (data.message || 'Unknown error'));
+                    }
+                } catch (error) {
+                    console.error('Error submitting rating:', error);
+                    alert('Error submitting rating. Please try again.');
+                }
+            }
+        }
+
+        // Reset search
+        function resetSearch() {
+            document.getElementById('searchForm').reset();
+            document.getElementById('searchResults').classList.add('hidden');
+            document.getElementById('noResults').classList.add('hidden');
+            document.getElementById('radiusValue').textContent = '5';
+        }
+
+        // Try to get user location on page load
+        window.addEventListener('load', function() {
+            // Auto-detect location if user allows
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        document.getElementById('location').placeholder = 'Current location detected';
+                    },
+                    function(error) {
+                        // Silently fail - user can manually enter location
+                    }
+                );
+            }
+        });
+    </script>
+</body>
+</html>

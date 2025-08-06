@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drug Management - Miss AFUNGFE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+                            400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+                            800: '#1e40af', 900: '#1e3a8a'
+                        },
+                        medical: {
+                            50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac',
+                            400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d',
+                            800: '#166534', 900: '#14532d'
+                        },
+                        accent: {
+                            50: '#fffbeb', 100: '#fef3c7', 200: '#fde68a', 300: '#fcd34d',
+                            400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309',
+                            800: '#92400e', 900: '#78350f'
+                        }
+                    },
+                    fontFamily: { 'sans': ['Inter', 'ui-sans-serif', 'system-ui'] },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out'
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+                    },
+                    boxShadow: {
+                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+                        'strong': '0 10px 40px -10px rgba(0, 0, 0, 0.1), 0 2px 10px -2px rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #22c55e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-medical-50 font-sans">
+    <!-- Background Elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-64 h-64 bg-primary-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div class="absolute top-40 right-20 w-80 h-80 bg-medical-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style="animation-delay: 1s;"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="relative bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-soft">
+        <div class="max-w-6xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="relative group">
+                        <div class="w-12 h-12 bg-gradient-to-r from-medical-500 to-accent-500 rounded-2xl flex items-center justify-center shadow-strong">
+                            <i class="fas fa-pills text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold gradient-text">Drug Management</h1>
+                        <p class="text-sm text-gray-600 font-medium">Add drugs to pharmacy inventory</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="admin-pharmacy-management.html" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Management
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative max-w-6xl mx-auto px-6 py-8">
+        <!-- Pharmacy Selection -->
+        <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-strong border border-white/20 mb-8 animate-fade-in">
+            <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-hospital text-primary-500 mr-3"></i>
+                Select Pharmacy
+            </h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Pharmacy *</label>
+                    <select id="pharmacySelect" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        <option value="">Select a pharmacy...</option>
+                    </select>
+                </div>
+                <div id="pharmacyInfo" class="hidden">
+                    <div class="bg-primary-50 rounded-xl p-4">
+                        <h4 class="font-semibold text-primary-800 mb-2">Selected Pharmacy</h4>
+                        <p id="selectedPharmacyName" class="text-primary-700"></p>
+                        <p id="selectedPharmacyAddress" class="text-sm text-primary-600"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drug Input Form -->
+        <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-strong border border-white/20 animate-slide-up">
+            <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-plus-circle text-medical-500 mr-3"></i>
+                Add Drugs to Inventory
+            </h3>
+            
+            <!-- Batch Input Area -->
+            <div class="mb-8">
+                <label class="block text-sm font-semibold text-gray-700 mb-3">Batch Drug Entry</label>
+                <p class="text-sm text-gray-600 mb-4">Enter multiple drugs at once. Use the format: Drug Name | Generic Name | Price per Card | Quantity in Carton | Stock Quantity</p>
+                <textarea id="batchDrugInput" rows="12" placeholder="Example:
+Paracetamol 500mg | Acetaminophen | 150 | 10 | 50
+Amoxicillin 250mg | Amoxicillin | 300 | 20 | 30
+Ibuprofen 400mg | Ibuprofen | 200 | 12 | 25
+Vitamin C 1000mg | Ascorbic Acid | 100 | 30 | 100
+
+Add as many drugs as you want, one per line..." class="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-transparent font-mono text-sm"></textarea>
+                <div class="mt-4 flex justify-between items-center">
+                    <div class="text-sm text-gray-600">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Separate each field with | (pipe symbol)
+                    </div>
+                    <button type="button" onclick="parseBatchInput()" class="px-6 py-2 bg-medical-500 text-white rounded-xl hover:bg-medical-600 transition-colors">
+                        <i class="fas fa-magic mr-2"></i>Parse & Preview
+                    </button>
+                </div>
+            </div>
+
+            <!-- Parsed Drugs Preview -->
+            <div id="parsedDrugsContainer" class="hidden mb-8">
+                <h4 class="text-lg font-bold text-gray-800 mb-4">Parsed Drugs Preview</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full bg-white rounded-xl shadow-soft">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Drug Name</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Generic Name</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Price/Card (XAF)</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Qty/Carton</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Price/Carton (XAF)</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Stock</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="parsedDrugsTable">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-6 text-center">
+                    <button type="button" onclick="submitAllDrugs()" class="px-8 py-3 bg-gradient-to-r from-medical-500 to-primary-500 text-white rounded-xl font-bold hover:from-medical-600 hover:to-primary-600 transition-all duration-300 transform hover:scale-105 shadow-strong">
+                        <i class="fas fa-save mr-2"></i>Add All Drugs to Pharmacy
+                    </button>
+                </div>
+            </div>
+
+            <!-- Manual Single Drug Entry -->
+            <div class="border-t border-gray-200 pt-8">
+                <h4 class="text-lg font-bold text-gray-800 mb-4">Or Add Single Drug Manually</h4>
+                <form id="singleDrugForm" class="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div class="lg:col-span-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Drug Name *</label>
+                        <input type="text" id="singleDrugName" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-500 focus:border-transparent">
+                    </div>
+                    <div class="lg:col-span-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Generic Name *</label>
+                        <input type="text" id="singleGenericName" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Price/Card (XAF) *</label>
+                        <input type="number" id="singlePriceCard" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Qty/Carton *</label>
+                        <input type="number" id="singleQtyCarton" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Stock Qty *</label>
+                        <input type="number" id="singleStock" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-500 focus:border-transparent">
+                    </div>
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Add Drug
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let parsedDrugs = [];
+
+        // Load pharmacies on page load
+        window.addEventListener('load', loadPharmacies);
+
+        async function loadPharmacies() {
+            try {
+                const response = await fetch('/api/admin/pharmacies', {
+                    headers: {
+                        'Authorization': 'Bearer admin-token'
+                    }
+                });
+                const pharmacies = await response.json();
+                
+                const select = document.getElementById('pharmacySelect');
+                select.innerHTML = '<option value="">Select a pharmacy...</option>';
+                
+                pharmacies.forEach(pharmacy => {
+                    const option = document.createElement('option');
+                    option.value = pharmacy.id;
+                    option.textContent = `${pharmacy.name} - ${pharmacy.address}`;
+                    option.dataset.name = pharmacy.name;
+                    option.dataset.address = pharmacy.address;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading pharmacies:', error);
+            }
+        }
+
+        // Pharmacy selection handler
+        document.getElementById('pharmacySelect').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const infoDiv = document.getElementById('pharmacyInfo');
+            
+            if (this.value) {
+                document.getElementById('selectedPharmacyName').textContent = selectedOption.dataset.name;
+                document.getElementById('selectedPharmacyAddress').textContent = selectedOption.dataset.address;
+                infoDiv.classList.remove('hidden');
+            } else {
+                infoDiv.classList.add('hidden');
+            }
+        });
+
+        // Parse batch input
+        function parseBatchInput() {
+            const batchText = document.getElementById('batchDrugInput').value.trim();
+            if (!batchText) {
+                alert('Please enter some drugs in the batch input area.');
+                return;
+            }
+
+            const lines = batchText.split('\n').filter(line => line.trim());
+            parsedDrugs = [];
+
+            lines.forEach((line, index) => {
+                const parts = line.split('|').map(part => part.trim());
+                if (parts.length === 5) {
+                    const [drugName, genericName, priceCard, qtyCarton, stock] = parts;
+                    const priceCarton = parseInt(priceCard) * parseInt(qtyCarton);
+                    
+                    parsedDrugs.push({
+                        drugName,
+                        genericName,
+                        priceCard: parseInt(priceCard),
+                        qtyCarton: parseInt(qtyCarton),
+                        priceCarton,
+                        stock: parseInt(stock)
+                    });
+                } else {
+                    console.warn(`Line ${index + 1} has incorrect format:`, line);
+                }
+            });
+
+            displayParsedDrugs();
+        }
+
+        // Display parsed drugs
+        function displayParsedDrugs() {
+            const container = document.getElementById('parsedDrugsContainer');
+            const tbody = document.getElementById('parsedDrugsTable');
+            
+            tbody.innerHTML = '';
+            
+            parsedDrugs.forEach((drug, index) => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-100';
+                row.innerHTML = `
+                    <td class="px-4 py-3 text-sm text-gray-800">${drug.drugName}</td>
+                    <td class="px-4 py-3 text-sm text-gray-600">${drug.genericName}</td>
+                    <td class="px-4 py-3 text-sm text-gray-800">${drug.priceCard.toLocaleString()}</td>
+                    <td class="px-4 py-3 text-sm text-gray-800">${drug.qtyCarton}</td>
+                    <td class="px-4 py-3 text-sm font-semibold text-primary-600">${drug.priceCarton.toLocaleString()}</td>
+                    <td class="px-4 py-3 text-sm text-gray-800">${drug.stock}</td>
+                    <td class="px-4 py-3">
+                        <button onclick="removeParsedDrug(${index})" class="text-red-500 hover:text-red-700">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            container.classList.remove('hidden');
+        }
+
+        // Remove parsed drug
+        function removeParsedDrug(index) {
+            parsedDrugs.splice(index, 1);
+            displayParsedDrugs();
+        }
+
+        // Submit all drugs
+        async function submitAllDrugs() {
+            const pharmacyId = document.getElementById('pharmacySelect').value;
+            if (!pharmacyId) {
+                alert('Please select a pharmacy first.');
+                return;
+            }
+
+            if (parsedDrugs.length === 0) {
+                alert('No drugs to add.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/admin/pharmacy/${pharmacyId}/batch-inventory`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer admin-token'
+                    },
+                    body: JSON.stringify({ drugs: parsedDrugs })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert(`Successfully added ${parsedDrugs.length} drugs to the pharmacy!`);
+                    document.getElementById('batchDrugInput').value = '';
+                    document.getElementById('parsedDrugsContainer').classList.add('hidden');
+                    parsedDrugs = [];
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('Error adding drugs: ' + error.message);
+            }
+        }
+
+        // Single drug form submission
+        document.getElementById('singleDrugForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const pharmacyId = document.getElementById('pharmacySelect').value;
+            if (!pharmacyId) {
+                alert('Please select a pharmacy first.');
+                return;
+            }
+
+            const drugData = {
+                drugName: document.getElementById('singleDrugName').value,
+                genericName: document.getElementById('singleGenericName').value,
+                priceCard: parseInt(document.getElementById('singlePriceCard').value),
+                qtyCarton: parseInt(document.getElementById('singleQtyCarton').value),
+                stock: parseInt(document.getElementById('singleStock').value)
+            };
+            
+            drugData.priceCarton = drugData.priceCard * drugData.qtyCarton;
+
+            try {
+                const response = await fetch(`/api/admin/pharmacy/${pharmacyId}/inventory`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer admin-token'
+                    },
+                    body: JSON.stringify(drugData)
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('Drug added successfully!');
+                    this.reset();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('Error adding drug: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

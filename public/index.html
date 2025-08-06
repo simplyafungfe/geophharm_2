@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geopharm Bamenda - Find Drugs & Pharmacies Near You</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a'
+                        },
+                        accent: {
+                            50: '#fefce8',
+                            100: '#fef9c3',
+                            200: '#fef08a',
+                            300: '#fde047',
+                            400: '#facc15',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                            700: '#a16207',
+                            800: '#854d0e',
+                            900: '#713f12'
+                        },
+                        medical: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d'
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'bounce-gentle': 'bounceGentle 2s infinite',
+                        'pulse-slow': 'pulse 3s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(40px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        bounceGentle: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+                        'medium': '0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 20px -5px rgba(0, 0, 0, 0.04)',
+                        'strong': '0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #eab308 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .medical-pattern {
+            background-image: 
+                radial-gradient(circle at 25px 25px, rgba(59, 130, 246, 0.05) 2px, transparent 2px),
+                radial-gradient(circle at 75px 75px, rgba(34, 197, 94, 0.05) 2px, transparent 2px);
+            background-size: 100px 100px;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-medical-50 medical-pattern">
+    <!-- Navigation -->
+    <nav class="glass-effect sticky top-0 z-50 animate-fade-in">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4 animate-slide-up">
+                    <div class="w-14 h-14 bg-gradient-to-br from-primary-500 via-primary-600 to-medical-500 rounded-2xl flex items-center justify-center shadow-medium animate-bounce-gentle">
+                        <i class="fas fa-pills text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold gradient-text">Geopharm</h1>
+                        <p class="text-sm text-gray-600 font-medium">Bamenda's Premier Drug Finder</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="search.html" class="group flex items-center text-primary-600 hover:text-primary-700 font-semibold transition-all duration-300">
+                        <i class="fas fa-search mr-2 group-hover:scale-110 transition-transform"></i>
+                        Search Drugs
+                    </a>
+                    <a href="login.html" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-primary-600 hover:to-primary-700 transition-all duration-300 transform hover:scale-105 shadow-medium">
+                        Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="relative overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-medical-50 opacity-50"></div>
+        <div class="absolute top-20 left-10 w-72 h-72 bg-primary-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse-slow"></div>
+        <div class="absolute top-40 right-10 w-72 h-72 bg-medical-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse-slow" style="animation-delay: 1s;"></div>
+        <div class="absolute bottom-20 left-1/2 w-72 h-72 bg-accent-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse-slow" style="animation-delay: 2s;"></div>
+        
+        <div class="relative container mx-auto px-6 py-24">
+            <div class="text-center mb-20 animate-fade-in">
+                <div class="mb-8">
+                    <span class="inline-block bg-gradient-to-r from-primary-500 to-medical-500 text-white px-6 py-2 rounded-full text-sm font-semibold mb-6 animate-slide-up">
+                        🏥 Trusted by 50+ Pharmacies in Bamenda
+                    </span>
+                </div>
+                
+                <h2 class="text-6xl md:text-7xl font-bold mb-8 animate-slide-up" style="animation-delay: 0.2s;">
+                    <span class="gradient-text">Find Drugs &</span><br>
+                    <span class="text-gray-800">Pharmacies</span>
+                    <span class="text-medical-500">Near You</span>
+                </h2>
+                
+                <p class="text-xl md:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed animate-slide-up" style="animation-delay: 0.4s;">
+                    Your trusted platform to locate medications and verified pharmacies across Bamenda. 
+                    <span class="text-primary-600 font-semibold">Search by drug name</span>, find nearby pharmacies, and get 
+                    <span class="text-medical-600 font-semibold">real-time availability</span>.
+                </p>
+                
+                <!-- Enhanced Quick Search -->
+                <div class="max-w-3xl mx-auto mb-12 animate-slide-up" style="animation-delay: 0.6s;">
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-500 to-medical-500 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+                        <div class="relative bg-white rounded-3xl p-2 shadow-strong">
+                            <div class="flex items-center">
+                                <div class="flex-1 relative">
+                                    <i class="fas fa-search absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Search for drugs (e.g., Paracetamol, Amoxicillin...)"
+                                        class="w-full pl-14 pr-6 py-5 text-lg bg-transparent border-none focus:outline-none placeholder-gray-400"
+                                        id="quickSearch"
+                                    >
+                                </div>
+                                <button 
+                                    onclick="performQuickSearch()"
+                                    class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-8 py-5 rounded-2xl font-semibold hover:from-primary-600 hover:to-primary-700 transition-all duration-300 transform hover:scale-105 shadow-medium"
+                                >
+                                    <i class="fas fa-search mr-2"></i>
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-6 animate-slide-up" style="animation-delay: 0.8s;">
+                    <a href="search.html" class="group bg-gradient-to-r from-primary-500 via-primary-600 to-medical-500 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:from-primary-600 hover:via-primary-700 hover:to-medical-600 transition-all duration-300 transform hover:scale-105 shadow-strong">
+                        <i class="fas fa-search mr-3 group-hover:rotate-12 transition-transform"></i>
+                        Advanced Search
+                    </a>
+                    <a href="#features" class="group bg-white/80 backdrop-blur-sm text-primary-600 px-10 py-5 rounded-2xl font-bold text-lg border-2 border-primary-200 hover:bg-white hover:border-primary-300 transition-all duration-300 transform hover:scale-105 shadow-medium">
+                        <i class="fas fa-info-circle mr-3 group-hover:bounce transition-transform"></i>
+                        Learn More
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="container mx-auto px-6 py-20">
+        <div class="text-center mb-16 animate-fade-in">
+            <h3 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+                Why Choose <span class="gradient-text">Geopharm</span>?
+            </h3>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Experience the future of pharmacy discovery with our cutting-edge features designed for your convenience.
+            </p>
+        </div>
+        
+        <div id="features" class="grid md:grid-cols-3 gap-8 mb-16">
+            <div class="group bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-soft hover:shadow-strong transition-all duration-500 transform hover:-translate-y-2 animate-slide-up border border-white/20">
+                <div class="relative mb-8">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary-100 to-primary-200 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-search-location text-primary-600 text-3xl group-hover:rotate-12 transition-transform"></i>
+                    </div>
+                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-primary-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 group-hover:text-primary-600 transition-colors">Location-Based Search</h3>
+                <p class="text-gray-600 leading-relaxed">Find pharmacies near you using GPS or manual location input. Get accurate distances and directions with real-time navigation.</p>
+                <div class="mt-6 flex items-center text-primary-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span class="mr-2">Learn more</span>
+                    <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </div>
+
+            <div class="group bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-soft hover:shadow-strong transition-all duration-500 transform hover:-translate-y-2 animate-slide-up border border-white/20" style="animation-delay: 0.2s;">
+                <div class="relative mb-8">
+                    <div class="w-20 h-20 bg-gradient-to-br from-medical-100 to-medical-200 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-pills text-medical-600 text-3xl group-hover:rotate-12 transition-transform"></i>
+                    </div>
+                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-medical-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 group-hover:text-medical-600 transition-colors">Real-Time Inventory</h3>
+                <p class="text-gray-600 leading-relaxed">Check drug availability, prices, and stock levels in real-time from verified pharmacies. Never waste a trip again.</p>
+                <div class="mt-6 flex items-center text-medical-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span class="mr-2">Learn more</span>
+                    <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </div>
+
+            <div class="group bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-soft hover:shadow-strong transition-all duration-500 transform hover:-translate-y-2 animate-slide-up border border-white/20" style="animation-delay: 0.4s;">
+                <div class="relative mb-8">
+                    <div class="w-20 h-20 bg-gradient-to-br from-accent-100 to-accent-200 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-shield-alt text-accent-600 text-3xl group-hover:rotate-12 transition-transform"></i>
+                    </div>
+                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-accent-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 group-hover:text-accent-600 transition-colors">Verified Pharmacies</h3>
+                <p class="text-gray-600 leading-relaxed">All pharmacies are manually verified by our admin team to ensure authenticity, quality, and regulatory compliance.</p>
+                <div class="mt-6 flex items-center text-accent-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span class="mr-2">Learn more</span>
+                    <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Types Section -->
+    <div class="container mx-auto px-6 py-20">
+        <div class="relative">
+            <!-- Background decoration -->
+            <div class="absolute inset-0 bg-gradient-to-r from-primary-50 to-medical-50 rounded-3xl transform rotate-1"></div>
+            <div class="relative bg-white/90 backdrop-blur-sm rounded-3xl p-12 shadow-strong border border-white/20">
+                <div class="text-center mb-16">
+                    <h3 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+                        Choose Your <span class="gradient-text">Access Level</span>
+                    </h3>
+                    <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                        Whether you're searching for medication, managing a pharmacy, or overseeing the platform, we have the perfect interface for you.
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Public Users -->
+                    <div class="group relative text-center animate-slide-up">
+                        <div class="absolute inset-0 bg-gradient-to-br from-primary-100 to-primary-200 rounded-3xl transform rotate-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="relative bg-white rounded-3xl p-8 shadow-medium hover:shadow-strong transition-all duration-300 transform group-hover:-translate-y-2 border border-gray-100">
+                            <div class="w-24 h-24 bg-gradient-to-br from-primary-100 to-primary-200 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-users text-primary-600 text-3xl group-hover:rotate-12 transition-transform"></i>
+                            </div>
+                            <h4 class="text-2xl font-bold text-gray-800 mb-4 group-hover:text-primary-600 transition-colors">Public Users</h4>
+                            <p class="text-gray-600 mb-8 leading-relaxed">Search for drugs, find nearby pharmacies, view prices and availability. No registration required.</p>
+                            <div class="space-y-4">
+                                <a href="search.html" class="group/btn block bg-gradient-to-r from-primary-500 to-primary-600 text-white py-4 px-8 rounded-2xl font-semibold hover:from-primary-600 hover:to-primary-700 transition-all duration-300 transform hover:scale-105 shadow-medium">
+                                    <i class="fas fa-search mr-2 group-hover/btn:rotate-12 transition-transform"></i>
+                                    Start Searching
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pharmacy Owners -->
+                    <div class="group relative text-center animate-slide-up" style="animation-delay: 0.2s;">
+                        <div class="absolute inset-0 bg-gradient-to-br from-medical-100 to-medical-200 rounded-3xl transform -rotate-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="relative bg-white rounded-3xl p-8 shadow-medium hover:shadow-strong transition-all duration-300 transform group-hover:-translate-y-2 border border-gray-100">
+                            <div class="w-24 h-24 bg-gradient-to-br from-medical-100 to-medical-200 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-store text-medical-600 text-3xl group-hover:rotate-12 transition-transform"></i>
+                            </div>
+                            <h4 class="text-2xl font-bold text-gray-800 mb-4 group-hover:text-medical-600 transition-colors">Pharmacy Owners</h4>
+                            <p class="text-gray-600 mb-8 leading-relaxed">Manage your pharmacy profile, update inventory, track inquiries and grow your business.</p>
+                            <div class="space-y-4">
+                                <a href="login.html" class="group/btn block bg-gradient-to-r from-medical-500 to-medical-600 text-white py-4 px-8 rounded-2xl font-semibold hover:from-medical-600 hover:to-medical-700 transition-all duration-300 transform hover:scale-105 shadow-medium">
+                                    <i class="fas fa-sign-in-alt mr-2 group-hover/btn:rotate-12 transition-transform"></i>
+                                    Login
+                                </a>
+                                <a href="register.html" class="group/btn block bg-white text-medical-600 py-4 px-8 rounded-2xl font-semibold border-2 border-medical-200 hover:bg-medical-50 hover:border-medical-300 transition-all duration-300 transform hover:scale-105">
+                                    <i class="fas fa-user-plus mr-2 group-hover/btn:rotate-12 transition-transform"></i>
+                                    Register Pharmacy
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Administrators -->
+                    <div class="group relative text-center animate-slide-up" style="animation-delay: 0.4s;">
+                        <div class="absolute inset-0 bg-gradient-to-br from-accent-100 to-accent-200 rounded-3xl transform rotate-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="relative bg-white rounded-3xl p-8 shadow-medium hover:shadow-strong transition-all duration-300 transform group-hover:-translate-y-2 border border-gray-100">
+                            <div class="w-24 h-24 bg-gradient-to-br from-accent-100 to-accent-200 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-user-shield text-accent-600 text-3xl group-hover:rotate-12 transition-transform"></i>
+                            </div>
+                            <h4 class="text-2xl font-bold text-gray-800 mb-4 group-hover:text-accent-600 transition-colors">Administrators</h4>
+                            <p class="text-gray-600 mb-8 leading-relaxed">Manage pharmacy approvals, monitor activity, handle reports and ensure platform quality.</p>
+                            <div class="space-y-4">
+                                <a href="admin.html" class="group/btn block bg-gradient-to-r from-accent-500 to-accent-600 text-white py-4 px-8 rounded-2xl font-semibold hover:from-accent-600 hover:to-accent-700 transition-all duration-300 transform hover:scale-105 shadow-medium">
+                                    <i class="fas fa-cog mr-2 group-hover/btn:rotate-12 transition-transform"></i>
+                                    Admin Panel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Statistics Section -->
+        <div class="grid md:grid-cols-4 gap-6 mb-16">
+            <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl p-6 text-center">
+                <div class="text-3xl font-bold mb-2" id="pharmacyCount">6+</div>
+                <div class="text-blue-100">Verified Pharmacies</div>
+            </div>
+            <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-2xl p-6 text-center">
+                <div class="text-3xl font-bold mb-2" id="drugCount">50+</div>
+                <div class="text-green-100">Available Drugs</div>
+            </div>
+            <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-2xl p-6 text-center">
+                <div class="text-3xl font-bold mb-2" id="searchCount">20+</div>
+                <div class="text-purple-100">Searches Completed</div>
+            </div>
+            <div class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-2xl p-6 text-center">
+                <div class="text-3xl font-bold mb-2">24/7</div>
+                <div class="text-orange-100">Platform Availability</div>
+            </div>
+        </div>
+
+        <!-- How It Works Section -->
+        <div class="text-center mb-16">
+            <h3 class="text-3xl font-bold text-gray-800 mb-12">How It Works</h3>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="relative">
+                    <div class="w-16 h-16 bg-primary-500 text-white rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold">1</div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-4">Search for Drugs</h4>
+                    <p class="text-gray-600">Enter the name of the medication you need and your location.</p>
+                    <div class="hidden md:block absolute top-8 -right-4 text-primary-300">
+                        <i class="fas fa-arrow-right text-2xl"></i>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <div class="w-16 h-16 bg-accent-500 text-white rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold">2</div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-4">Find Nearby Pharmacies</h4>
+                    <p class="text-gray-600">View a list of verified pharmacies with the drug in stock, sorted by distance.</p>
+                    <div class="hidden md:block absolute top-8 -right-4 text-accent-300">
+                        <i class="fas fa-arrow-right text-2xl"></i>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold">3</div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-4">Visit & Purchase</h4>
+                    <p class="text-gray-600">Get directions, contact the pharmacy, and purchase your medication.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="bg-gradient-to-r from-primary-500 to-accent-500 rounded-3xl p-12 text-center text-white">
+            <h3 class="text-3xl font-bold mb-4">Ready to Find Your Medication?</h3>
+            <p class="text-xl mb-8 opacity-90">Join thousands of users who trust Geopharm for their healthcare needs.</p>
+            <a href="search.html" class="bg-white text-primary-600 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-gray-100 transition-colors inline-block">
+                <i class="fas fa-search mr-2"></i>
+                Start Searching Now
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-r from-primary-500 to-accent-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-pills text-white"></i>
+                        </div>
+                        <h4 class="text-xl font-bold">Geopharm</h4>
+                    </div>
+                    <p class="text-gray-400">Your trusted platform for finding drugs and pharmacies in Bamenda.</p>
+                </div>
+                
+                <div>
+                    <h5 class="font-bold mb-4">Quick Links</h5>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="search.html" class="hover:text-white">Search Drugs</a></li>
+                        <li><a href="login.html" class="hover:text-white">Login</a></li>
+                        <li><a href="register.html" class="hover:text-white">Register</a></li>
+                        <li><a href="admin.html" class="hover:text-white">Admin Panel</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-bold mb-4">For Pharmacies</h5>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="register.html" class="hover:text-white">Join Platform</a></li>
+                        <li><a href="pharmacist-dashboard.html" class="hover:text-white">Dashboard</a></li>
+                        <li><a href="#" class="hover:text-white">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-bold mb-4">Contact</h5>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fas fa-phone mr-2"></i>+237 673 24 50 79</li>
+                        <li><i class="fas fa-envelope mr-2"></i>info@geopharm.cm</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i>Bamenda, Cameroon</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 Geopharm Bamenda. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Quick search functionality
+        function performQuickSearch() {
+            const query = document.getElementById('quickSearch').value.trim();
+            if (query) {
+                window.location.href = `search.html?drug=${encodeURIComponent(query)}`;
+            }
+        }
+
+        // Enter key support for quick search
+        document.getElementById('quickSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performQuickSearch();
+            }
+        });
+
+        // Load statistics
+        async function loadStatistics() {
+            try {
+                const response = await fetch('/api/admin/dashboard-stats');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        document.getElementById('pharmacyCount').textContent = data.stats.total_pharmacies + '+';
+                        document.getElementById('drugCount').textContent = data.stats.total_drugs + '+';
+                        document.getElementById('searchCount').textContent = (data.stats.total_searches || 5000) + '+';
+                    }
+                }
+            } catch (error) {
+                console.log('Could not load statistics');
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStatistics();
+        });
+    </script>
+</body>
+</html>
